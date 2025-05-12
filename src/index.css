@@ -90,6 +90,7 @@
   background: rgba(15, 15, 15, 0.5);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
 }
 
 .workspace-card {
@@ -97,6 +98,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius);
   transition: all 0.3s ease;
+  padding: 1.5rem;
 }
 
 .workspace-card:hover {
@@ -124,4 +126,51 @@
 
 .glow {
   box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+}
+
+/* New styles for StartWise */
+.tab-active {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgb(139, 92, 246);
+}
+
+.gradient-text {
+  background: linear-gradient(to right, #8B5CF6, #EC4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.feature-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+}
+
+.feature-card:hover::before {
+  opacity: 1;
+}
+
+.priority-high {
+  @apply bg-red-500/20 text-red-300;
+}
+
+.priority-medium {
+  @apply bg-yellow-500/20 text-yellow-300;
+}
+
+.priority-low {
+  @apply bg-green-500/20 text-green-300;
 }
