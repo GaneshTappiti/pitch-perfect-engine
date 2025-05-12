@@ -38,6 +38,9 @@ export const Navbar = () => {
             <Link to="/pricing" className="text-sm font-medium hover:text-primary">
               Pricing
             </Link>
+            <Link to="/about" className="text-sm font-medium hover:text-primary">
+              About
+            </Link>
           </nav>
         </div>
         
@@ -103,6 +106,13 @@ export const Navbar = () => {
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Pricing
+                </Link>
+                <Link 
+                  to="/about" 
+                  className="text-sm font-medium hover:text-primary py-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  About
                 </Link>
                 <div className="flex flex-col gap-4 pt-4 border-t border-white/10">
                   <Button className="bg-primary hover:bg-primary/90">
