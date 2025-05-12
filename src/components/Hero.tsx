@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 const Hero = () => {
   const [email, setEmail] = useState("");
@@ -18,41 +19,60 @@ const Hero = () => {
   };
 
   return (
-    <section className="w-full py-24 md:py-32 lg:py-40 hero-gradient relative overflow-hidden">
+    <section className="w-full pt-28 pb-20 md:pt-32 md:pb-28 relative overflow-hidden">
       <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center space-y-4 text-center">
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-              <span className="text-gradient">Validate Your Startup Idea</span> <br />
-              From Concept to MVP in Minutes
+        <div className="flex flex-col items-center space-y-8 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/5 px-3 py-1 text-sm backdrop-blur-sm border border-white/10">
+            <Sparkles className="h-4 w-4 text-primary" />
+            <span>Transforming ideas into reality</span>
+          </div>
+          
+          <div className="space-y-4 max-w-3xl">
+            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl/none">
+              The Ultimate <span className="text-gradient">AI Platform</span> For <br />
+              Startup Founders
             </h1>
-            <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400 mt-4">
-              Our AI platform validates your ideas, generates roadmaps, creates pitch scripts, 
-              suggests UI designs, and helps you build your MVP — all in one place.
+            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+              Transform your ideas into successful startups with our all-in-one validation, 
+              planning, and development platform powered by AI.
             </p>
           </div>
-          <div className="w-full max-w-sm space-y-2">
-            <form className="flex space-x-2" onSubmit={handleSubmit}>
+          
+          <div className="w-full max-w-md space-y-3">
+            <form className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2" onSubmit={handleSubmit}>
               <Input
-                className="max-w-lg flex-1 bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/50"
+                className="flex-1 bg-white/5 backdrop-blur-sm border-white/10 text-white placeholder:text-white/50"
                 placeholder="Enter your email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <Button type="submit" className="bg-primary hover:bg-primary/90">
-                Join Waitlist
+              <Button type="submit" className="bg-primary hover:bg-primary/90 flex items-center gap-2">
+                Start Free Trial
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </form>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              Join 2000+ founders already validating their ideas.
+            <p className="text-xs text-gray-500">
+              No credit card required. 14-day free trial.
             </p>
+          </div>
+          
+          <div className="relative w-full max-w-5xl mt-16">
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background z-10"></div>
+            <img 
+              src="https://i.imgur.com/XQK6xDp.png" 
+              alt="Startify OS Dashboard" 
+              className="w-full object-cover rounded-lg border border-white/10 shadow-xl"
+            />
           </div>
         </div>
       </div>
+      
       {/* Decorative elements */}
-      <div className="absolute top-1/4 left-0 w-72 h-72 bg-violet-600/20 rounded-full filter blur-3xl -z-10"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-pink-600/20 rounded-full filter blur-3xl -z-10"></div>
+      <div className="absolute -top-20 left-0 w-full">
+        <div className="absolute top-0 -left-40 w-96 h-96 bg-purple-600/20 rounded-full filter blur-3xl"></div>
+        <div className="absolute top-40 right-0 w-96 h-96 bg-pink-600/10 rounded-full filter blur-3xl"></div>
+      </div>
     </section>
   );
 };
