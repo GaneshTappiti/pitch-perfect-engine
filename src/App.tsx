@@ -12,6 +12,11 @@ import IdeaVault from "./pages/IdeaVault";
 import BlueprintZone from "./pages/BlueprintZone";
 import TaskPlanner from "./pages/TaskPlanner";
 import MVPStudio from "./pages/MVPStudio";
+import DocsDecks from "./pages/DocsDecks";
+import TeamSpace from "./pages/TeamSpace";
+import InvestorRadar from "./pages/InvestorRadar";
+import TractionBoard from "./pages/TractionBoard";
+import IdeaWiki from "./pages/IdeaWiki";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +33,11 @@ const App = () => (
           <Route path="/workspace/blueprint-zone" element={<BlueprintZone />} />
           <Route path="/workspace/task-planner" element={<TaskPlanner />} />
           <Route path="/workspace/mvp-studio" element={<MVPStudio />} />
+          <Route path="/workspace/docs-decks" element={<DocsDecks />} />
+          <Route path="/workspace/teamspace" element={<TeamSpace />} />
+          <Route path="/workspace/investor-radar" element={<InvestorRadar />} />
+          <Route path="/workspace/traction-board" element={<TractionBoard />} />
+          <Route path="/workspace/idea-wiki" element={<IdeaWiki />} />
           <Route path="/features" element={<Index />} />
           <Route path="/about" element={<About />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
