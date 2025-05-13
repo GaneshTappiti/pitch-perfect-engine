@@ -17,6 +17,7 @@ import TeamSpace from "./pages/TeamSpace";
 import InvestorRadar from "./pages/InvestorRadar";
 import TractionBoard from "./pages/TractionBoard";
 import IdeaWiki from "./pages/IdeaWiki";
+import PitchPerfect from "./pages/PitchPerfect";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/workspace/investor-radar" element={<InvestorRadar />} />
           <Route path="/workspace/traction-board" element={<TractionBoard />} />
           <Route path="/workspace/idea-wiki" element={<IdeaWiki />} />
+          <Route path="/workspace/pitch-perfect" element={<PitchPerfect />} />
           <Route path="/features" element={<Index />} />
           <Route path="/about" element={<About />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
