@@ -12,6 +12,7 @@ const Features = () => {
       title: "Dashboard",
       description: "Launchpad to all tools with quick access, daily brief, and startup health meter",
       gradient: "feature-gradient-1",
+      path: "/workspace",
     },
     {
       id: "idea-vault",
@@ -19,6 +20,7 @@ const Features = () => {
       title: "Idea Vault",
       description: "Store + grow ideas with AI enhancer, tags, voting, and privacy controls",
       gradient: "feature-gradient-2",
+      path: "/workspace/idea-vault",
     },
     {
       id: "ai-roadmap",
@@ -26,6 +28,7 @@ const Features = () => {
       title: "AI Roadmap",
       description: "Auto-generate business plans with GPT-based phase planning and editable milestones",
       gradient: "feature-gradient-3",
+      path: "/workspace/blueprint-zone",
     },
     {
       id: "task-planner",
@@ -33,6 +36,7 @@ const Features = () => {
       title: "Task Planner",
       description: "Build execution calendar with daily/weekly/monthly smart planning",
       gradient: "feature-gradient-4",
+      path: "/workspace/task-planner",
     },
     {
       id: "mvp-studio",
@@ -40,6 +44,7 @@ const Features = () => {
       title: "MVP Studio",
       description: "Build using AI + no-code with builder templates, GPT codex, and MVP checklists",
       gradient: "feature-gradient-1",
+      path: "/workspace/mvp-studio",
     },
     {
       id: "docs-decks",
@@ -47,6 +52,7 @@ const Features = () => {
       title: "Docs & Decks",
       description: "Auto-generate investor decks, one-pagers and more with AI assistance",
       gradient: "feature-gradient-2",
+      path: "/workspace/docs-decks",
     },
     {
       id: "teamspace",
@@ -54,6 +60,7 @@ const Features = () => {
       title: "TeamSpace",
       description: "Collaborate with founders and team members with roles, chat, and co-founder tasks",
       gradient: "feature-gradient-3",
+      path: "/workspace/teamspace",
     },
     {
       id: "investor-radar",
@@ -61,6 +68,7 @@ const Features = () => {
       title: "Investor Radar",
       description: "Get matched to VCs with filters by region, sector, ticket size, and stage",
       gradient: "feature-gradient-4",
+      path: "/workspace/investor-radar",
     },
     {
       id: "traction-board",
@@ -68,6 +76,7 @@ const Features = () => {
       title: "Traction Board",
       description: "Track your metrics including users, revenue, and feedback logs",
       gradient: "feature-gradient-1",
+      path: "/workspace/traction-board",
     },
     {
       id: "idea-wiki",
@@ -75,6 +84,7 @@ const Features = () => {
       title: "Idea Wiki",
       description: "Build a knowledge base with Markdown editor, tag system, and linked docs",
       gradient: "feature-gradient-2",
+      path: "/workspace/idea-wiki",
     },
   ];
 
@@ -170,6 +180,12 @@ const Features = () => {
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base">{feature.description}</CardDescription>
+                <Button asChild className="mt-4">
+                  <Link to={feature.path}>
+                    Explore
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
               </CardContent>
             </Card>
           ))}
