@@ -211,17 +211,17 @@ const MVPStudio = () => {
                         </div>
                         <div className="font-mono text-sm text-muted-foreground">
                           <p>// Your generated code will appear here</p>
-                          <p className="text-primary">import React from 'react';</p>
-                          <p>import &#123; useState &#125; from 'react';</p>
+                          <p className="text-primary">import React from &apos;react&apos;;</p>
+                          <p>import {'{'} useState {'}'} from &apos;react&apos;;</p>
                           <p>&nbsp;</p>
-                          <p className="text-primary">const App = () => &#123;</p>
+                          <p className="text-primary">const App = () =&gt; {'{'}</p>
                           <p>&nbsp; // Generated components will be here</p>
                           <p>&nbsp; return (</p>
                           <p>&nbsp;&nbsp; &lt;div&gt;</p>
                           <p>&nbsp;&nbsp;&nbsp; &lt;h1&gt;My Awesome App&lt;/h1&gt;</p>
                           <p>&nbsp;&nbsp; &lt;/div&gt;</p>
                           <p>&nbsp; );</p>
-                          <p>&#125;</p>
+                          <p>{'}'}</p>
                           <p>&nbsp;</p>
                           <p className="text-primary">export default App;</p>
                         </div>
