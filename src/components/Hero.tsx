@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   const [email, setEmail] = useState("");
@@ -55,6 +56,20 @@ const Hero = () => {
             <p className="text-xs text-gray-500">
               No credit card required. 14-day free trial.
             </p>
+          </div>
+          
+          <div className="flex mt-8 gap-4">
+            <Button asChild variant="outline" className="border-white/10 hover:bg-white/5">
+              <Link to="/features">
+                Explore Features
+              </Link>
+            </Button>
+            <Button asChild>
+              <Link to="/workspace">
+                Get Started
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </div>
           
           <div className="relative w-full max-w-5xl mt-16">

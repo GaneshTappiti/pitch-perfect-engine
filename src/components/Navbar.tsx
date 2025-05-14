@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { 
   Search, 
   Bell, 
@@ -13,29 +13,48 @@ import { useState } from "react";
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  
+  // Check if the current path matches the given path
+  const isActive = (path: string) => {
+    return location.pathname === path || 
+      (path !== '/' && location.pathname.startsWith(path));
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-lg border-b border-white/10">
       <div className="container flex items-center justify-between h-16 px-4 md:px-6">
         <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <div className="rounded-full bg-gradient-custom w-8 h-8 flex items-center justify-center">
               <span className="font-bold text-white text-sm">IV</span>
             </div>
             <span className="font-bold text-lg hidden md:inline-block">Startify OS</span>
-          </div>
+          </Link>
           
           <nav className="hidden md:flex items-center gap-6">
-            <Link to="/" className="text-sm font-medium hover:text-primary">
+            <Link 
+              to="/" 
+              className={`text-sm font-medium transition-colors ${isActive('/') ? 'text-primary' : 'hover:text-primary'}`}
+            >
               Home
             </Link>
-            <Link to="/workspace" className="text-sm font-medium hover:text-primary">
+            <Link 
+              to="/workspace" 
+              className={`text-sm font-medium transition-colors ${isActive('/workspace') ? 'text-primary' : 'hover:text-primary'}`}
+            >
               Workspace
             </Link>
-            <Link to="/features" className="text-sm font-medium hover:text-primary">
+            <Link 
+              to="/features" 
+              className={`text-sm font-medium transition-colors ${isActive('/features') ? 'text-primary' : 'hover:text-primary'}`}
+            >
               Features
             </Link>
-            <Link to="/about" className="text-sm font-medium hover:text-primary">
+            <Link 
+              to="/about" 
+              className={`text-sm font-medium transition-colors ${isActive('/about') ? 'text-primary' : 'hover:text-primary'}`}
+            >
               About
             </Link>
           </nav>
@@ -59,8 +78,10 @@ export const Navbar = () => {
             </button>
           </div>
           
-          <Button className="bg-primary hover:bg-primary/90 hidden md:flex">
-            Get Started
+          <Button asChild className="bg-primary hover:bg-primary/90 hidden md:flex">
+            <Link to="/workspace">
+              Get Started
+            </Link>
           </Button>
           
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -78,35 +99,37 @@ export const Navbar = () => {
               <div className="flex flex-col gap-6 pt-6">
                 <Link 
                   to="/" 
-                  className="text-sm font-medium hover:text-primary py-2"
+                  className={`text-sm font-medium py-2 ${isActive('/') ? 'text-primary' : 'hover:text-primary'}`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Home
                 </Link>
                 <Link 
                   to="/workspace" 
-                  className="text-sm font-medium hover:text-primary py-2"
+                  className={`text-sm font-medium py-2 ${isActive('/workspace') ? 'text-primary' : 'hover:text-primary'}`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Workspace
                 </Link>
                 <Link 
                   to="/features" 
-                  className="text-sm font-medium hover:text-primary py-2"
+                  className={`text-sm font-medium py-2 ${isActive('/features') ? 'text-primary' : 'hover:text-primary'}`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Features
                 </Link>
                 <Link 
                   to="/about" 
-                  className="text-sm font-medium hover:text-primary py-2"
+                  className={`text-sm font-medium py-2 ${isActive('/about') ? 'text-primary' : 'hover:text-primary'}`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   About
                 </Link>
                 <div className="flex flex-col gap-4 pt-4 border-t border-white/10">
-                  <Button className="bg-primary hover:bg-primary/90">
-                    Get Started
+                  <Button asChild className="bg-primary hover:bg-primary/90">
+                    <Link to="/workspace" onClick={() => setIsMobileMenuOpen(false)}>
+                      Get Started
+                    </Link>
                   </Button>
                 </div>
               </div>
