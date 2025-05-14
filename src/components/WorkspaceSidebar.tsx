@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   LayoutDashboard, 
@@ -11,20 +11,26 @@ import {
   Search, 
   BarChart, 
   BookOpen,
-  MessageSquare
+  MessageSquare,
+  X
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 
 interface SidebarItemProps {
   icon: React.ElementType;
   label: string;
   path: string;
   isActive: boolean;
+  onClick?: () => void;
 }
 
-const SidebarItem = ({ icon: Icon, label, path, isActive }: SidebarItemProps) => {
+const SidebarItem = ({ icon: Icon, label, path, isActive, onClick }: SidebarItemProps) => {
   return (
     <Link
       to={path}
+      onClick={onClick}
       className={`flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm transition-colors ${
         isActive 
           ? "bg-sidebar-accent text-sidebar-primary" 
@@ -40,6 +46,21 @@ const SidebarItem = ({ icon: Icon, label, path, isActive }: SidebarItemProps) =>
 const WorkspaceSidebar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
+  const isMobile = useIsMobile();
+  const [isOpen, setIsOpen] = useState(false);
+  
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setIsOpen(false);
+    }
+  };
+  
+  // Close sidebar when route changes on mobile
+  useEffect(() => {
+    if (isMobile) {
+      setIsOpen(false);
+    }
+  }, [location.pathname, isMobile]);
   
   const modules = [
     { id: "dashboard", name: "Dashboard", icon: LayoutDashboard, path: "/workspace" },
@@ -54,8 +75,8 @@ const WorkspaceSidebar = () => {
     { id: "idea-wiki", name: "Idea Wiki", icon: BookOpen, path: "/workspace/idea-wiki" }
   ];
 
-  return (
-    <aside className="w-64 bg-sidebar border-r border-sidebar-border fixed h-screen z-10">
+  const sidebarContent = (
+    <>
       <div className="p-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="rounded-full bg-gradient-custom w-8 h-8 flex items-center justify-center">
@@ -63,6 +84,12 @@ const WorkspaceSidebar = () => {
           </div>
           <span className="font-bold text-lg">StartWise</span>
         </div>
+        {isMobile && (
+          <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="md:hidden">
+            <X className="h-5 w-5" />
+            <span className="sr-only">Close</span>
+          </Button>
+        )}
       </div>
       
       <div className="px-2 py-4">
@@ -73,6 +100,7 @@ const WorkspaceSidebar = () => {
               icon={module.icon}
               label={module.name}
               path={module.path}
+              onClick={handleLinkClick}
               isActive={
                 module.path === "/workspace" 
                   ? currentPath === "/workspace"
@@ -99,6 +127,38 @@ const WorkspaceSidebar = () => {
           </button>
         </div>
       </div>
+    </>
+  );
+
+  if (isMobile) {
+    return (
+      <>
+        <DrawerTrigger asChild>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="fixed top-4 left-4 z-30 md:hidden"
+            onClick={() => setIsOpen(true)}
+          >
+            <LayoutDashboard className="h-5 w-5" />
+            <span className="sr-only">Open Menu</span>
+          </Button>
+        </DrawerTrigger>
+        
+        <Drawer open={isOpen} onOpenChange={setIsOpen}>
+          <DrawerContent className="h-[80vh] max-h-[80vh]">
+            <div className="w-full h-full bg-sidebar border-r border-sidebar-border relative overflow-y-auto">
+              {sidebarContent}
+            </div>
+          </DrawerContent>
+        </Drawer>
+      </>
+    );
+  }
+
+  return (
+    <aside className="w-64 bg-sidebar border-r border-sidebar-border fixed h-screen z-10 hidden md:block">
+      {sidebarContent}
     </aside>
   );
 };

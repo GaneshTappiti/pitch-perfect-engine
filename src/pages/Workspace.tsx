@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -65,7 +65,7 @@ const Workspace = () => {
       <WorkspaceSidebar />
       
       {/* Main content */}
-      <main className="flex-1 p-6 ml-64 transition-all duration-300">
+      <main className="flex-1 p-6 transition-all duration-300 md:ml-64">
         <div className="container mx-auto">
           <header className="mb-8">
             <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
