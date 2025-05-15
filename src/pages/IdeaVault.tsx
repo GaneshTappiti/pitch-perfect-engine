@@ -41,8 +41,8 @@ const IdeaVault = () => {
   const { toast } = useToast();
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   
-  // Mock data for ideas
-  const ideas = [
+  // Mock data for ideas with properly typed status
+  const ideas: IdeaProps[] = [
     {
       id: 1,
       title: "HealthTrack App",
