@@ -19,6 +19,7 @@ import TractionBoard from "./pages/TractionBoard";
 import IdeaWiki from "./pages/IdeaWiki";
 import PitchPerfect from "./pages/PitchPerfect";
 import FeaturesPage from "./pages/Features";
+import IdeaDetails from "./pages/IdeaDetails";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/workspace" element={<Workspace />} />
           <Route path="/workspace/idea-vault" element={<IdeaVault />} />
+          <Route path="/workspace/idea-vault/:ideaId" element={<IdeaDetails />} />
           <Route path="/workspace/blueprint-zone" element={<BlueprintZone />} />
           <Route path="/workspace/task-planner" element={<TaskPlanner />} />
           <Route path="/workspace/mvp-studio" element={<MVPStudio />} />
@@ -43,7 +45,6 @@ const App = () => (
           <Route path="/workspace/pitch-perfect" element={<PitchPerfect />} />
           <Route path="/features" element={<FeaturesPage />} />
           <Route path="/about" element={<About />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

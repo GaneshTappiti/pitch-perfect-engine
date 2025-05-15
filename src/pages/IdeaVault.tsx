@@ -1,9 +1,11 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 import { 
   Search, 
   Plus,
@@ -13,11 +15,33 @@ import {
   Tag,
   Lightbulb
 } from "lucide-react";
-import WorkspaceSidebar from "@/components/WorkspaceSidebar";
+import WorkspaceLayout from "@/components/WorkspaceLayout";
+import NewIdeaModal from "@/components/idea-vault/NewIdeaModal";
+import FilterModal from "@/components/idea-vault/FilterModal";
+import IdeaCard from "@/components/idea-vault/IdeaCard";
+import { useDebounce } from "@/hooks/use-debounce";
+
+export interface IdeaProps {
+  id: number;
+  title: string;
+  description: string;
+  tags: string[];
+  votes: number;
+  comments: number;
+  status: "validated" | "exploring" | "archived";
+}
 
 const IdeaVault = () => {
   const [activeTab, setActiveTab] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isNewIdeaModalOpen, setIsNewIdeaModalOpen] = useState(false);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [filteredIdeas, setFilteredIdeas] = useState<IdeaProps[]>([]);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   
+  // Mock data for ideas
   const ideas = [
     {
       id: 1,
@@ -57,107 +81,132 @@ const IdeaVault = () => {
     }
   ];
 
+  // Filter ideas based on tab and search term
+  useEffect(() => {
+    let result = [...ideas];
+    
+    // Filter by tab
+    if (activeTab !== "all") {
+      result = result.filter(idea => idea.status === activeTab);
+    }
+    
+    // Filter by search term
+    if (debouncedSearchTerm) {
+      result = result.filter(idea => 
+        idea.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) || 
+        idea.description.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+        idea.tags.some(tag => tag.toLowerCase().includes(debouncedSearchTerm.toLowerCase()))
+      );
+    }
+    
+    setFilteredIdeas(result);
+  }, [activeTab, debouncedSearchTerm]);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleOpenNewIdeaModal = () => {
+    setIsNewIdeaModalOpen(true);
+  };
+
+  const handleOpenFilterModal = () => {
+    setIsFilterModalOpen(true);
+  };
+
+  const handleCreateIdea = (ideaData: Partial<IdeaProps>) => {
+    toast({
+      title: "Idea created!",
+      description: "Your new idea has been added to the vault.",
+    });
+    setIsNewIdeaModalOpen(false);
+  };
+
+  const handleIdeaClick = (id: number) => {
+    navigate(`/workspace/idea-vault/${id}`);
+  };
+
+  const handleVoteClick = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent navigating to idea details
+    
+    toast({
+      title: "Vote added!",
+      description: "You've upvoted this idea.",
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-background flex">
-      <WorkspaceSidebar />
-      
-      {/* Main content */}
-      <main className="flex-1 p-6 ml-64 transition-all duration-300">
-        <div className="container mx-auto">
-          <header className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Idea Vault</h1>
-            <p className="text-muted-foreground">
-              Store, organize, and validate your startup ideas
-            </p>
-          </header>
-          
-          <div className="mb-8 flex flex-col md:flex-row gap-4 justify-between">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input className="pl-10" placeholder="Search ideas..." />
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline">
-                <Filter className="h-4 w-4 mr-2" />
-                Filter
-              </Button>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                New Idea
-              </Button>
-            </div>
+    <WorkspaceLayout>
+      <div className="container mx-auto">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Idea Vault</h1>
+          <p className="text-muted-foreground">
+            Store, organize, and validate your startup ideas
+          </p>
+        </header>
+        
+        <div className="mb-8 flex flex-col md:flex-row gap-4 justify-between">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Input 
+              className="pl-10" 
+              placeholder="Search ideas..." 
+              value={searchTerm}
+              onChange={handleSearch}
+            />
           </div>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={handleOpenFilterModal}>
+              <Filter className="h-4 w-4 mr-2" />
+              Filter
+            </Button>
+            <Button onClick={handleOpenNewIdeaModal}>
+              <Plus className="h-4 w-4 mr-2" />
+              New Idea
+            </Button>
+          </div>
+        </div>
+        
+        <Tabs defaultValue="all" className="mb-8" onValueChange={setActiveTab} value={activeTab}>
+          <TabsList>
+            <TabsTrigger 
+              value="all" 
+              className={activeTab === "all" ? "tab-active" : ""}
+            >
+              All Ideas
+            </TabsTrigger>
+            <TabsTrigger 
+              value="validated" 
+              className={activeTab === "validated" ? "tab-active" : ""}
+            >
+              Validated
+            </TabsTrigger>
+            <TabsTrigger 
+              value="exploring" 
+              className={activeTab === "exploring" ? "tab-active" : ""}
+            >
+              Exploring
+            </TabsTrigger>
+            <TabsTrigger 
+              value="archived" 
+              className={activeTab === "archived" ? "tab-active" : ""}
+            >
+              Archived
+            </TabsTrigger>
+          </TabsList>
           
-          <Tabs defaultValue="all" className="mb-8">
-            <TabsList>
-              <TabsTrigger 
-                value="all" 
-                onClick={() => setActiveTab("all")}
-                className={activeTab === "all" ? "tab-active" : ""}
-              >
-                All Ideas
-              </TabsTrigger>
-              <TabsTrigger 
-                value="validated" 
-                onClick={() => setActiveTab("validated")}
-                className={activeTab === "validated" ? "tab-active" : ""}
-              >
-                Validated
-              </TabsTrigger>
-              <TabsTrigger 
-                value="exploring" 
-                onClick={() => setActiveTab("exploring")}
-                className={activeTab === "exploring" ? "tab-active" : ""}
-              >
-                Exploring
-              </TabsTrigger>
-              <TabsTrigger 
-                value="archived" 
-                onClick={() => setActiveTab("archived")}
-                className={activeTab === "archived" ? "tab-active" : ""}
-              >
-                Archived
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="all" className="mt-6">
+          <TabsContent value={activeTab} className="mt-6">
+            {filteredIdeas.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {ideas.map(idea => (
-                  <Card key={idea.id} className="workspace-card hover:shadow-lg cursor-pointer">
-                    <CardHeader>
-                      <CardTitle>{idea.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <p className="text-sm text-muted-foreground">{idea.description}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {idea.tags.map((tag, index) => (
-                          <div key={index} className="bg-white/10 px-2 py-1 rounded-full text-xs flex items-center">
-                            <Tag className="h-3 w-3 mr-1" />
-                            {tag}
-                          </div>
-                        ))}
-                      </div>
-                      <div className="flex justify-between pt-4 text-muted-foreground text-sm">
-                        <div className="flex items-center gap-1">
-                          <ThumbsUp className="h-4 w-4" />
-                          <span>{idea.votes}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <MessageSquare className="h-4 w-4" />
-                          <span>{idea.comments}</span>
-                        </div>
-                        <div>
-                          <span className={`px-2 py-1 rounded-full text-xs uppercase ${
-                            idea.status === 'validated' ? 'bg-green-500/20 text-green-300' : 'bg-yellow-500/20 text-yellow-300'
-                          }`}>
-                            {idea.status}
-                          </span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                {filteredIdeas.map(idea => (
+                  <IdeaCard 
+                    key={idea.id}
+                    idea={idea}
+                    onClick={() => handleIdeaClick(idea.id)}
+                    onVoteClick={(e) => handleVoteClick(idea.id, e)}
+                  />
                 ))}
-                <Card className="workspace-card border-dashed border-2 flex flex-col items-center justify-center cursor-pointer">
+                <Card className="workspace-card border-dashed border-2 flex flex-col items-center justify-center cursor-pointer" onClick={handleOpenNewIdeaModal}>
                   <CardContent className="flex flex-col items-center justify-center p-6 h-full">
                     <div className="rounded-full bg-white/5 p-3 mb-4">
                       <Plus className="h-6 w-6" />
@@ -167,97 +216,40 @@ const IdeaVault = () => {
                   </CardContent>
                 </Card>
               </div>
-            </TabsContent>
-            
-            <TabsContent value="validated" className="mt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {ideas.filter(i => i.status === "validated").map(idea => (
-                  <Card key={idea.id} className="workspace-card hover:shadow-lg cursor-pointer">
-                    <CardHeader>
-                      <CardTitle>{idea.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <p className="text-sm text-muted-foreground">{idea.description}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {idea.tags.map((tag, index) => (
-                          <div key={index} className="bg-white/10 px-2 py-1 rounded-full text-xs flex items-center">
-                            <Tag className="h-3 w-3 mr-1" />
-                            {tag}
-                          </div>
-                        ))}
-                      </div>
-                      <div className="flex justify-between pt-4 text-muted-foreground text-sm">
-                        <div className="flex items-center gap-1">
-                          <ThumbsUp className="h-4 w-4" />
-                          <span>{idea.votes}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <MessageSquare className="h-4 w-4" />
-                          <span>{idea.comments}</span>
-                        </div>
-                        <div>
-                          <span className="bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-xs uppercase">
-                            {idea.status}
-                          </span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="exploring" className="mt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {ideas.filter(i => i.status === "exploring").map(idea => (
-                  <Card key={idea.id} className="workspace-card hover:shadow-lg cursor-pointer">
-                    <CardHeader>
-                      <CardTitle>{idea.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <p className="text-sm text-muted-foreground">{idea.description}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {idea.tags.map((tag, index) => (
-                          <div key={index} className="bg-white/10 px-2 py-1 rounded-full text-xs flex items-center">
-                            <Tag className="h-3 w-3 mr-1" />
-                            {tag}
-                          </div>
-                        ))}
-                      </div>
-                      <div className="flex justify-between pt-4 text-muted-foreground text-sm">
-                        <div className="flex items-center gap-1">
-                          <ThumbsUp className="h-4 w-4" />
-                          <span>{idea.votes}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <MessageSquare className="h-4 w-4" />
-                          <span>{idea.comments}</span>
-                        </div>
-                        <div>
-                          <span className="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded-full text-xs uppercase">
-                            {idea.status}
-                          </span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="archived" className="mt-6">
+            ) : (
               <div className="flex flex-col items-center justify-center py-16">
                 <div className="bg-white/5 p-6 rounded-full mb-4">
                   <Lightbulb className="h-10 w-10 text-muted-foreground" />
                 </div>
-                <h3 className="text-xl font-medium mb-2">No Archived Ideas</h3>
-                <p className="text-muted-foreground mb-6">You haven't archived any ideas yet</p>
+                <h3 className="text-xl font-medium mb-2">No ideas found</h3>
+                <p className="text-muted-foreground mb-6">
+                  {activeTab === "archived" 
+                    ? "You haven't archived any ideas yet." 
+                    : searchTerm 
+                      ? "No matches found. Maybe create it?" 
+                      : "Got something cool? Start now!"}
+                </p>
+                <Button onClick={handleOpenNewIdeaModal}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Start a new idea
+                </Button>
               </div>
-            </TabsContent>
-          </Tabs>
-        </div>
-      </main>
-    </div>
+            )}
+          </TabsContent>
+        </Tabs>
+      </div>
+      
+      <NewIdeaModal 
+        isOpen={isNewIdeaModalOpen} 
+        onClose={() => setIsNewIdeaModalOpen(false)} 
+        onSubmit={handleCreateIdea}
+      />
+      
+      <FilterModal
+        isOpen={isFilterModalOpen}
+        onClose={() => setIsFilterModalOpen(false)}
+      />
+    </WorkspaceLayout>
   );
 };
 
