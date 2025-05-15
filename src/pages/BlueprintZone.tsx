@@ -1,15 +1,11 @@
-
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/toaster";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Plus,
-  Flag,
-  Calendar,
-  Clock,
-  CheckCircle
-} from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Progress } from "@/components/ui/progress";
+import { CheckCircle2, Circle, Clock, Plus } from "lucide-react";
 import WorkspaceLayout from "@/components/WorkspaceLayout";
 import AddPhaseModal from "@/components/blueprint/AddPhaseModal";
 import TaskModal from "@/components/blueprint/TaskModal";
@@ -23,7 +19,6 @@ const BlueprintZone = () => {
   const [selectedPhaseId, setSelectedPhaseId] = useState<string | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [taskModalMode, setTaskModalMode] = useState<"add" | "edit">("add");
-  const { toast } = useToast();
   
   // Initialize with sample data
   useEffect(() => {

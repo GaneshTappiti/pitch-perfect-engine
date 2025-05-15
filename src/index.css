@@ -56,6 +56,15 @@
   }
 }
 
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
 .hero-gradient {
   background: linear-gradient(90deg, rgba(139, 92, 246, 0.15) 0%, rgba(217, 70, 239, 0.15) 100%);
 }
@@ -104,6 +113,14 @@
 .workspace-card:hover {
   border-color: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
+}
+
+.hover-shadow-glow:hover {
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+}
+
+.shadow-glow {
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
 }
 
 .sidebar-active {
