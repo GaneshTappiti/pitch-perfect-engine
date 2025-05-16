@@ -20,6 +20,7 @@ import IdeaWiki from "./pages/IdeaWiki";
 import PitchPerfect from "./pages/PitchPerfect";
 import FeaturesPage from "./pages/Features";
 import IdeaDetails from "./pages/IdeaDetails";
+import DocumentEditor from "./pages/DocumentEditor";
 
 const queryClient = new QueryClient();
 
@@ -38,11 +39,13 @@ const App = () => (
           <Route path="/workspace/task-planner" element={<TaskPlanner />} />
           <Route path="/workspace/mvp-studio" element={<MVPStudio />} />
           <Route path="/workspace/docs-decks" element={<DocsDecks />} />
+          <Route path="/workspace/docs-decks/editor/:docId" element={<DocumentEditor />} />
           <Route path="/workspace/teamspace" element={<TeamSpace />} />
           <Route path="/workspace/investor-radar" element={<InvestorRadar />} />
           <Route path="/workspace/traction-board" element={<TractionBoard />} />
           <Route path="/workspace/idea-wiki" element={<IdeaWiki />} />
           <Route path="/workspace/pitch-perfect" element={<PitchPerfect />} />
+          <Route path="/workspace/pitch-perfect/editor/:type/:id" element={<DocumentEditor />} />
           <Route path="/features" element={<FeaturesPage />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />
