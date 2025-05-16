@@ -8,12 +8,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FundingRound } from "@/types/investor";
+import { FundingRound, FundingRoundInput } from "@/types/investor";
 
 interface AddFundingRoundModalProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<FundingRound, 'id'>) => void;
+  onSubmit: (data: FundingRoundInput) => void;
 }
 
 const fundingRoundSchema = z.object({
@@ -47,7 +47,18 @@ const AddFundingRoundModal: React.FC<AddFundingRoundModalProps> = ({
   });
 
   function handleSubmit(data: FundingRoundFormValues) {
-    onSubmit(data);
+    // Ensure all required fields are present
+    const roundData: FundingRoundInput = {
+      name: data.name,
+      target: data.target,
+      raised: data.raised,
+      progress: data.progress,
+      investors: data.investors,
+      status: data.status,
+      timeline: data.timeline,
+    };
+    
+    onSubmit(roundData);
     form.reset();
   }
 

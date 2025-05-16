@@ -8,7 +8,7 @@ export interface Investor {
   portfolio: number;
   stage: string;
   lastMeeting: string;
-  status: string;
+  status: InvestorStatus;
   logo?: string;
   contacts?: Contact[];
   notes?: string;
@@ -32,3 +32,7 @@ export interface FundingRound {
   status: 'active' | 'planned' | 'completed';
   timeline?: string;
 }
+
+// Form input types for new entries (without id)
+export interface InvestorInput extends Omit<Investor, 'id'> {}
+export interface FundingRoundInput extends Omit<FundingRound, 'id'> {}

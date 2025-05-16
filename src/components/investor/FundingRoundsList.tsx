@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Briefcase, Clock as ClockIcon } from "lucide-react";
-import { FundingRound } from "@/types/investor";
+import { FundingRound, FundingRoundInput } from "@/types/investor";
 import EmptyState from "./EmptyState";
 import AddFundingRoundModal from "./AddFundingRoundModal";
 
 interface FundingRoundsListProps {
   fundingRounds: FundingRound[];
-  onAddFundingRound: (round: FundingRound) => void;
+  onAddFundingRound: (round: FundingRoundInput) => void;
 }
 
 const FundingRoundsList: React.FC<FundingRoundsListProps> = ({

@@ -1,9 +1,5 @@
 
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Filter, Plus } from "lucide-react";
 import WorkspaceSidebar from "@/components/WorkspaceSidebar";
 import InvestorsList from "@/components/investor/InvestorsList";
 import FundingRoundsList from "@/components/investor/FundingRoundsList";
@@ -11,8 +7,11 @@ import PitchDeckView from "@/components/investor/PitchDeckView";
 import { useToast } from "@/hooks/use-toast";
 import FilterDrawer from "@/components/investor/FilterDrawer";
 import AddInvestorModal from "@/components/investor/AddInvestorModal";
-import { Investor, FundingRound } from "@/types/investor";
+import { Investor, InvestorInput, FundingRound, FundingRoundInput } from "@/types/investor";
 import { mockInvestors, mockFundingRounds } from "@/data/mockInvestorData";
+import { TabsContent } from "@/components/ui/tabs";
+import ActionBar from "@/components/investor/ActionBar";
+import TabNavigation from "@/components/investor/TabNavigation";
 
 const InvestorRadar = () => {
   const [activeTab, setActiveTab] = useState("investors");
@@ -34,8 +33,8 @@ const InvestorRadar = () => {
     setFilteredInvestors(filtered);
   }, [searchQuery, investors]);
 
-  const handleAddInvestor = (investor: Investor) => {
-    const updatedInvestors = [...investors, { ...investor, id: investors.length + 1 }];
+  const handleAddInvestor = (investorData: InvestorInput) => {
+    const updatedInvestors = [...investors, { ...investorData, id: investors.length + 1 }];
     setInvestors(updatedInvestors);
     setIsAddInvestorOpen(false);
     toast({
@@ -46,7 +45,7 @@ const InvestorRadar = () => {
 
   const handleUpdateInvestorStatus = (id: number, status: string) => {
     const updatedInvestors = investors.map(investor => 
-      investor.id === id ? { ...investor, status } : investor
+      investor.id === id ? { ...investor, status: status as any } : investor
     );
     setInvestors(updatedInvestors);
     toast({
@@ -63,8 +62,8 @@ const InvestorRadar = () => {
     });
   };
 
-  const handleAddFundingRound = (round: FundingRound) => {
-    const updatedRounds = [...fundingRounds, { ...round, id: fundingRounds.length + 1 }];
+  const handleAddFundingRound = (roundData: FundingRoundInput) => {
+    const updatedRounds = [...fundingRounds, { ...roundData, id: fundingRounds.length + 1 }];
     setFundingRounds(updatedRounds);
     toast({
       title: "Success",
@@ -86,60 +85,17 @@ const InvestorRadar = () => {
             </p>
           </header>
           
-          <div className="mb-8 flex flex-col md:flex-row gap-4 justify-between">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input 
-                className="pl-10" 
-                placeholder="Search investors..." 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <div className="flex gap-2">
-              <Button 
-                variant="outline"
-                onClick={() => setIsFilterOpen(true)}
-                className="transition-all hover:bg-accent hover:text-accent-foreground"
-              >
-                <Filter className="h-4 w-4 mr-2" />
-                Filter
-              </Button>
-              <Button 
-                onClick={() => setIsAddInvestorOpen(true)}
-                className="transition-all hover:scale-105"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Investor
-              </Button>
-            </div>
-          </div>
+          <ActionBar 
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onFilterClick={() => setIsFilterOpen(true)}
+            onAddClick={() => setIsAddInvestorOpen(true)}
+          />
           
-          <Tabs defaultValue="investors" className="mb-8">
-            <TabsList className="mb-2 overflow-x-auto max-w-full">
-              <TabsTrigger 
-                value="investors" 
-                onClick={() => setActiveTab("investors")}
-                className={`transition-all ${activeTab === "investors" ? "tab-active" : ""}`}
-              >
-                Investors
-              </TabsTrigger>
-              <TabsTrigger 
-                value="funding" 
-                onClick={() => setActiveTab("funding")}
-                className={`transition-all ${activeTab === "funding" ? "tab-active" : ""}`}
-              >
-                Funding Rounds
-              </TabsTrigger>
-              <TabsTrigger 
-                value="pitchdeck" 
-                onClick={() => setActiveTab("pitchdeck")}
-                className={`transition-all ${activeTab === "pitchdeck" ? "tab-active" : ""}`}
-              >
-                Pitch Deck
-              </TabsTrigger>
-            </TabsList>
-            
+          <TabNavigation 
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          >
             <TabsContent value="investors" className="mt-6 animate-fade-in">
               <InvestorsList 
                 investors={filteredInvestors} 
@@ -159,7 +115,7 @@ const InvestorRadar = () => {
             <TabsContent value="pitchdeck" className="mt-6 animate-fade-in">
               <PitchDeckView />
             </TabsContent>
-          </Tabs>
+          </TabNavigation>
         </div>
       </main>
 

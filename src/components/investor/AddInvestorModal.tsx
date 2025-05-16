@@ -8,12 +8,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Investor } from "@/types/investor";
+import { Investor, InvestorInput, InvestorStatus } from "@/types/investor";
+import { Textarea } from "../ui/textarea";
 
 interface AddInvestorModalProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<Investor, 'id'>) => void;
+  onSubmit: (data: InvestorInput) => void;
 }
 
 const investorSchema = z.object({
@@ -21,8 +22,8 @@ const investorSchema = z.object({
   focus: z.string().min(1, "Focus area is required"),
   portfolio: z.coerce.number().int().positive("Portfolio must be a positive number"),
   stage: z.string().min(1, "Investment stage is required"),
-  lastMeeting: z.string().optional(),
-  status: z.string().min(1, "Status is required"),
+  lastMeeting: z.string().default("Never"),
+  status: z.string().min(1, "Status is required") as z.ZodType<InvestorStatus>,
   notes: z.string().optional(),
 });
 
@@ -43,7 +44,18 @@ const AddInvestorModal: React.FC<AddInvestorModalProps> = ({ open, onClose, onSu
   });
 
   function handleSubmit(data: InvestorFormValues) {
-    onSubmit(data);
+    // Ensure all required fields are present
+    const investorData: InvestorInput = {
+      name: data.name,
+      focus: data.focus,
+      portfolio: data.portfolio,
+      stage: data.stage,
+      lastMeeting: data.lastMeeting,
+      status: data.status as InvestorStatus,
+      notes: data.notes || "",
+    };
+    
+    onSubmit(investorData);
     form.reset();
   }
 
@@ -175,7 +187,7 @@ const AddInvestorModal: React.FC<AddInvestorModalProps> = ({ open, onClose, onSu
                 <FormItem>
                   <FormLabel>Notes</FormLabel>
                   <FormControl>
-                    <Input placeholder="Any additional notes" {...field} />
+                    <Textarea placeholder="Any additional notes about this investor..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
