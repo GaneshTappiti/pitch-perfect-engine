@@ -1,0 +1,34 @@
+
+export type InvestorStatus = 'interested' | 'follow-up' | 'to-contact' | 'rejected' | 'committed';
+
+export interface Investor {
+  id: number;
+  name: string;
+  focus: string;
+  portfolio: number;
+  stage: string;
+  lastMeeting: string;
+  status: string;
+  logo?: string;
+  contacts?: Contact[];
+  notes?: string;
+}
+
+export interface Contact {
+  id: number;
+  date: string;
+  type: 'call' | 'email' | 'meeting' | 'other';
+  notes: string;
+  outcome: string;
+}
+
+export interface FundingRound {
+  id: number;
+  name: string;
+  target: string;
+  raised: string;
+  progress: number;
+  investors: number;
+  status: 'active' | 'planned' | 'completed';
+  timeline?: string;
+}

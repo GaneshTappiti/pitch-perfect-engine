@@ -86,7 +86,7 @@
 
 @layer utilities {
   .workspace-card {
-    @apply border bg-card text-card-foreground shadow-sm rounded-lg overflow-hidden;
+    @apply border bg-card text-card-foreground shadow-sm rounded-lg overflow-hidden transition-all duration-200;
   }
   
   .glass-effect {
@@ -118,11 +118,57 @@
     }
   }
   
+  @keyframes scale-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes slide-in {
+    0% {
+      transform: translateX(-20px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
   .animate-fade-in {
     animation: fade-in 0.3s ease-out forwards;
+  }
+  
+  .animate-scale-in {
+    animation: scale-in 0.3s ease-out forwards;
+  }
+  
+  .animate-slide-in {
+    animation: slide-in 0.3s ease-out forwards;
   }
   
   .animate-float {
     animation: float 5s ease-in-out infinite;
   }
+  
+  /* Card hover effects */
+  .hover-card-scale {
+    @apply transition-all duration-200 hover:scale-[1.02];
+  }
+  
+  /* Button hover effects */
+  .button-hover-scale {
+    @apply transition-all duration-200 hover:scale-105;
+  }
+  
+  /* Tab transitions */
+  .tab-transition {
+    @apply transition-all duration-300;
+  }
 }
+
