@@ -11,6 +11,7 @@ import WikiEmptyState from "@/components/wiki/WikiEmptyState";
 import WikiSidebar from "@/components/wiki/WikiSidebar";
 import WikiSearch from "@/components/wiki/WikiSearch";
 import WikiAiAssistant from "@/components/wiki/WikiAiAssistant";
+import { WikiPage, WikiPageInput } from "@/types/wiki";
 
 const IdeaWiki = () => {
   const { toast } = useToast();
