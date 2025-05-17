@@ -21,6 +21,8 @@ import PitchPerfect from "./pages/PitchPerfect";
 import FeaturesPage from "./pages/Features";
 import IdeaDetails from "./pages/IdeaDetails";
 import DocumentEditor from "./pages/DocumentEditor";
+import WikiPageView from "./pages/WikiPageView";
+import WikiPageEditor from "./pages/WikiPageEditor";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +46,8 @@ const App = () => (
           <Route path="/workspace/investor-radar" element={<InvestorRadar />} />
           <Route path="/workspace/traction-board" element={<TractionBoard />} />
           <Route path="/workspace/idea-wiki" element={<IdeaWiki />} />
+          <Route path="/workspace/idea-wiki/:pageId" element={<WikiPageView />} />
+          <Route path="/workspace/idea-wiki/:pageId/edit" element={<WikiPageEditor />} />
           <Route path="/workspace/pitch-perfect" element={<PitchPerfect />} />
           <Route path="/workspace/pitch-perfect/editor/:type/:id" element={<DocumentEditor />} />
           <Route path="/features" element={<FeaturesPage />} />
