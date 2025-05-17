@@ -4,15 +4,15 @@ import { Link, useLocation } from "react-router-dom";
 import { 
   LayoutDashboard, 
   Lightbulb, 
-  FileText, 
   Calendar, 
   Code, 
   Users, 
   Search, 
   BarChart, 
-  BookOpen,
+  Brain,
   MessageSquare,
-  X
+  X,
+  FileText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -65,14 +65,13 @@ const WorkspaceSidebar = () => {
   const modules = [
     { id: "dashboard", name: "Dashboard", icon: LayoutDashboard, path: "/workspace" },
     { id: "idea-vault", name: "Idea Vault", icon: Lightbulb, path: "/workspace/idea-vault" },
-    { id: "blueprint-zone", name: "Blueprint Zone", icon: FileText, path: "/workspace/blueprint-zone" },
+    { id: "ideaforge", name: "IdeaForge", icon: Brain, path: "/workspace/ideaforge" },
     { id: "task-planner", name: "Task Planner", icon: Calendar, path: "/workspace/task-planner" },
     { id: "mvp-studio", name: "MVP Studio", icon: Code, path: "/workspace/mvp-studio" },
     { id: "docs-decks", name: "Docs & Decks", icon: FileText, path: "/workspace/docs-decks" },
     { id: "teamspace", name: "TeamSpace", icon: Users, path: "/workspace/teamspace" },
     { id: "investor-radar", name: "Investor Radar", icon: Search, path: "/workspace/investor-radar" },
-    { id: "traction-board", name: "Traction Board", icon: BarChart, path: "/workspace/traction-board" },
-    { id: "idea-wiki", name: "Idea Wiki", icon: BookOpen, path: "/workspace/idea-wiki" }
+    { id: "traction-board", name: "Traction Board", icon: BarChart, path: "/workspace/traction-board" }
   ];
 
   const sidebarContent = (

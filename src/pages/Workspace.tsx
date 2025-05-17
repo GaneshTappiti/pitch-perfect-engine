@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { 
   MessageSquare,
   PlusCircle,
-  ArrowRight
+  ArrowRight,
+  Brain
 } from "lucide-react";
 import WorkspaceSidebar from "@/components/WorkspaceSidebar";
 
@@ -38,11 +39,11 @@ const Workspace = () => {
       path: "/workspace/idea-vault"
     },
     {
-      id: "blueprint-zone",
-      name: "Blueprint Zone",
-      description: "Create detailed roadmaps and plans",
-      icon: "🗺️",
-      path: "/workspace/blueprint-zone"
+      id: "ideaforge",
+      name: "IdeaForge",
+      description: "Transform ideas into structured blueprints",
+      icon: "🧠",
+      path: "/workspace/ideaforge"
     },
     {
       id: "task-planner",
