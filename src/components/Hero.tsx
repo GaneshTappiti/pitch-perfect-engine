@@ -71,14 +71,6 @@ const Hero = () => {
               </Link>
             </Button>
           </div>
-          
-          <div className="relative w-full max-w-5xl mt-16">
-            <img 
-              src="https://i.imgur.com/XQK6xDp.png" 
-              alt="Startify OS Dashboard" 
-              className="w-full object-cover rounded-lg border border-white/10 shadow-xl"
-            />
-          </div>
         </div>
       </div>
       
