@@ -132,17 +132,15 @@ const WorkspaceSidebar = () => {
   if (isMobile) {
     return (
       <>
-        <DrawerTrigger asChild>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="fixed top-4 left-4 z-30 md:hidden"
-            onClick={() => setIsOpen(true)}
-          >
-            <LayoutDashboard className="h-5 w-5" />
-            <span className="sr-only">Open Menu</span>
-          </Button>
-        </DrawerTrigger>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="fixed top-4 left-4 z-30 md:hidden"
+          onClick={() => setIsOpen(true)}
+        >
+          <LayoutDashboard className="h-5 w-5" />
+          <span className="sr-only">Open Menu</span>
+        </Button>
         
         <Drawer open={isOpen} onOpenChange={setIsOpen}>
           <DrawerContent className="h-[80vh] max-h-[80vh]">
