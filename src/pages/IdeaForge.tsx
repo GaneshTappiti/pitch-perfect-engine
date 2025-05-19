@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect } from "react";
-import WorkspaceLayout from "@/components/WorkspaceLayout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Link } from "react-router-dom";
 import { 
   PlusCircle, 
   Search, 
@@ -13,10 +13,10 @@ import {
   Brain,
   Map,
   MessageSquare,
-  Settings
+  Settings,
+  ChevronLeft,
 } from "lucide-react";
 import { IdeaDocument, IdeaInput, ViewMode } from "@/types/ideaforge";
-import IdeaForgeSidebar from "@/components/ideaforge/IdeaForgeSidebar";
 import NewIdeaModal from "@/components/ideaforge/NewIdeaModal";
 import IdeaEmptyState from "@/components/ideaforge/IdeaEmptyState";
 import IdeaSearch from "@/components/ideaforge/IdeaSearch";
@@ -26,6 +26,7 @@ import JourneyView from "@/components/ideaforge/JourneyView";
 import FeedbackView from "@/components/ideaforge/FeedbackView";
 import IdeaCard from "@/components/ideaforge/IdeaCard";
 import IdeaForgeAssistant from "@/components/ideaforge/IdeaForgeAssistant";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const IdeaForge = () => {
   const { toast } = useToast();
@@ -33,9 +34,9 @@ const IdeaForge = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [showAiAssistant, setShowAiAssistant] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedIdeaId, setSelectedIdeaId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("wiki");
+  const isMobile = useIsMobile();
   
   // Handle creating a new idea
   const handleCreateIdea = (idea: IdeaInput) => {
@@ -89,139 +90,180 @@ const IdeaForge = () => {
   }, [ideas.length]);
 
   return (
-    <WorkspaceLayout>
-      <div className="flex h-[calc(100vh-2rem)]">
-        {/* Sidebar */}
-        <IdeaForgeSidebar 
-          ideas={ideas}
-          selectedIdeaId={selectedIdeaId}
-          onSelectIdea={setSelectedIdeaId}
-          onCreateIdea={() => document.getElementById('new-idea-trigger')?.click()}
-          isOpen={sidebarOpen}
-          onToggle={() => setSidebarOpen(!sidebarOpen)}
-        />
-        
-        {/* Main Content */}
-        <div className="flex-1 overflow-auto p-6">
-          {selectedIdea ? (
-            <div className="h-full flex flex-col">
-              {/* Header */}
-              <header className="mb-6 flex justify-between items-center">
-                <div>
-                  <h1 className="text-3xl font-bold mb-2">{selectedIdea.title}</h1>
-                  <p className="text-muted-foreground">
-                    {selectedIdea.description}
-                  </p>
+    <div className="min-h-screen bg-background">
+      {/* Breadcrumb Navigation */}
+      <div className="border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Link 
+              to="/workspace" 
+              className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <span className="text-sm">Back to Workspace</span>
+            </Link>
+          </div>
+          <div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setShowSearch(!showSearch)}
+              className="mr-2"
+            >
+              <Search className="h-4 w-4 mr-2" />
+              Search
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => document.getElementById('new-idea-trigger')?.click()}
+            >
+              <PlusCircle className="h-4 w-4 mr-2" />
+              New Idea
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-6">
+        {selectedIdea ? (
+          <div className="space-y-6">
+            {/* Header */}
+            <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+              <div>
+                <h1 className="text-3xl font-bold">{selectedIdea.title}</h1>
+                <p className="text-muted-foreground mt-1">
+                  {selectedIdea.description}
+                </p>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {selectedIdea.tags.map((tag, index) => (
+                    <span key={index} className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs">
+                      {tag}
+                    </span>
+                  ))}
                 </div>
+              </div>
+              
+              <div className="flex items-center gap-2 self-end sm:self-auto">
+                <Button 
+                  variant="outline"
+                  onClick={() => setSelectedIdeaId(null)}
+                  size="sm"
+                  className="h-9"
+                >
+                  All Ideas
+                </Button>
                 
-                <div className="flex items-center gap-3">
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    onClick={() => setShowSearch(!showSearch)}
-                    className="transition-all hover:bg-primary/10"
+                <Button 
+                  onClick={() => setShowAiAssistant(true)}
+                  size="sm"
+                  className="gap-2 h-9"
+                >
+                  <Brain className="h-4 w-4" />
+                  AI Assistant
+                </Button>
+              </div>
+            </header>
+            
+            {showSearch && (
+              <div className="animate-fade-in">
+                <IdeaSearch 
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  onClose={() => setShowSearch(false)}
+                />
+              </div>
+            )}
+            
+            {/* View Switcher */}
+            <Tabs 
+              value={viewMode} 
+              onValueChange={(value) => setViewMode(value as ViewMode)} 
+              className="space-y-6"
+            >
+              <div className="border-b border-border">
+                <TabsList className="bg-transparent h-12 p-0 -mb-px">
+                  <TabsTrigger 
+                    value="wiki" 
+                    className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-6 h-12"
                   >
-                    <Search className="h-5 w-5" />
-                    <span className="sr-only">Search</span>
-                  </Button>
-                  
-                  <Button 
-                    variant="outline" 
-                    size="icon"
-                    onClick={() => setSidebarOpen(!sidebarOpen)}
-                    className={`transition-all ${sidebarOpen ? 'bg-primary/20' : 'hover:bg-primary/10'}`}
-                  >
-                    <FileText className="h-5 w-5" />
-                    <span className="sr-only">Toggle Sidebar</span>
-                  </Button>
-                  
-                  <Button 
-                    variant="outline" 
-                    onClick={() => setShowAiAssistant(true)}
-                    className="gap-2"
-                  >
-                    <Brain className="h-5 w-5" />
-                    AI Assistant
-                  </Button>
-                </div>
-              </header>
-              
-              {showSearch && (
-                <div className="mb-6 animate-fade-in">
-                  <IdeaSearch 
-                    value={searchQuery}
-                    onChange={setSearchQuery}
-                    onClose={() => setShowSearch(false)}
-                  />
-                </div>
-              )}
-              
-              {/* View Switcher */}
-              <Tabs 
-                value={viewMode} 
-                onValueChange={(value) => setViewMode(value as ViewMode)} 
-                className="flex-1 flex flex-col"
-              >
-                <TabsList className="mb-6">
-                  <TabsTrigger value="wiki" className="flex gap-2 items-center">
-                    <FileText className="h-4 w-4" />
+                    <FileText className="h-4 w-4 mr-2" />
                     Wiki
                   </TabsTrigger>
-                  <TabsTrigger value="blueprint" className="flex gap-2 items-center">
-                    <Layers className="h-4 w-4" />
+                  <TabsTrigger 
+                    value="blueprint" 
+                    className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-6 h-12"
+                  >
+                    <Layers className="h-4 w-4 mr-2" />
                     Blueprint
                   </TabsTrigger>
-                  <TabsTrigger value="journey" className="flex gap-2 items-center">
-                    <Map className="h-4 w-4" />
+                  <TabsTrigger 
+                    value="journey" 
+                    className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-6 h-12"
+                  >
+                    <Map className="h-4 w-4 mr-2" />
                     Journey Map
                   </TabsTrigger>
-                  <TabsTrigger value="feedback" className="flex gap-2 items-center">
-                    <MessageSquare className="h-4 w-4" />
+                  <TabsTrigger 
+                    value="feedback" 
+                    className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-6 h-12"
+                  >
+                    <MessageSquare className="h-4 w-4 mr-2" />
                     Feedback
                   </TabsTrigger>
                 </TabsList>
-                
-                <TabsContent value="wiki" className="flex-1 overflow-auto">
-                  <WikiView idea={selectedIdea} />
-                </TabsContent>
-                
-                <TabsContent value="blueprint" className="flex-1 overflow-auto">
-                  <BlueprintView ideaId={selectedIdea.id} />
-                </TabsContent>
-                
-                <TabsContent value="journey" className="flex-1 overflow-auto">
-                  <JourneyView ideaId={selectedIdea.id} />
-                </TabsContent>
-                
-                <TabsContent value="feedback" className="flex-1 overflow-auto">
-                  <FeedbackView ideaId={selectedIdea.id} />
-                </TabsContent>
-              </Tabs>
-            </div>
-          ) : (
-            <div className="container mx-auto">
-              <header className="mb-8 flex justify-between items-center">
-                <div>
-                  <h1 className="text-3xl font-bold mb-2">IdeaForge</h1>
-                  <p className="text-muted-foreground">
-                    Transform your ideas into structured plans and blueprints
-                  </p>
-                </div>
-                
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button className="gap-2">
-                      <PlusCircle className="h-5 w-5" />
-                      New Idea
-                    </Button>
-                  </DialogTrigger>
-                  <NewIdeaModal onCreateIdea={handleCreateIdea} />
-                </Dialog>
-              </header>
+              </div>
+              
+              <TabsContent value="wiki" className="mt-6 animate-fade-in">
+                <WikiView idea={selectedIdea} />
+              </TabsContent>
+              
+              <TabsContent value="blueprint" className="mt-6 animate-fade-in">
+                <BlueprintView ideaId={selectedIdea.id} />
+              </TabsContent>
+              
+              <TabsContent value="journey" className="mt-6 animate-fade-in">
+                <JourneyView ideaId={selectedIdea.id} />
+              </TabsContent>
+              
+              <TabsContent value="feedback" className="mt-6 animate-fade-in">
+                <FeedbackView ideaId={selectedIdea.id} />
+              </TabsContent>
+            </Tabs>
+          </div>
+        ) : (
+          <div className="space-y-8">
+            <header className="flex justify-between items-center">
+              <div>
+                <h1 className="text-3xl font-bold mb-2">IdeaForge</h1>
+                <p className="text-muted-foreground">
+                  Transform your ideas into structured plans and blueprints
+                </p>
+              </div>
+              
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="gap-2">
+                    <PlusCircle className="h-5 w-5" />
+                    New Idea
+                  </Button>
+                </DialogTrigger>
+                <NewIdeaModal onCreateIdea={handleCreateIdea} />
+              </Dialog>
+            </header>
 
-              {ideas.length === 0 ? (
-                <IdeaEmptyState onCreateClick={() => document.getElementById('new-idea-trigger')?.click()} />
-              ) : (
+            {ideas.length === 0 ? (
+              <IdeaEmptyState onCreateClick={() => document.getElementById('new-idea-trigger')?.click()} />
+            ) : (
+              <>
+                {showSearch && (
+                  <div className="animate-fade-in mb-6">
+                    <IdeaSearch 
+                      value={searchQuery}
+                      onChange={setSearchQuery}
+                      onClose={() => setShowSearch(false)}
+                    />
+                  </div>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredIdeas.map((idea) => (
                     <IdeaCard 
@@ -231,33 +273,33 @@ const IdeaForge = () => {
                     />
                   ))}
                 </div>
-              )}
-            </div>
-          )}
-        </div>
-        
-        {/* Floating create button */}
-        <div className="fixed bottom-8 right-8">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button 
-                id="new-idea-trigger"
-                className="h-14 w-14 rounded-full shadow-lg"
-              >
-                <PlusCircle className="h-6 w-6" />
-                <span className="sr-only">New Idea</span>
-              </Button>
-            </DialogTrigger>
-            <NewIdeaModal onCreateIdea={handleCreateIdea} />
-          </Dialog>
-        </div>
-        
-        {/* AI Assistant */}
-        {showAiAssistant && (
-          <IdeaForgeAssistant onClose={() => setShowAiAssistant(false)} />
+              </>
+            )}
+          </div>
         )}
       </div>
-    </WorkspaceLayout>
+      
+      {/* Floating create button */}
+      <div className="fixed bottom-8 right-8">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button 
+              id="new-idea-trigger"
+              className="h-14 w-14 rounded-full shadow-lg"
+            >
+              <PlusCircle className="h-6 w-6" />
+              <span className="sr-only">New Idea</span>
+            </Button>
+          </DialogTrigger>
+          <NewIdeaModal onCreateIdea={handleCreateIdea} />
+        </Dialog>
+      </div>
+      
+      {/* Side panels and modals */}
+      {showAiAssistant && (
+        <IdeaForgeAssistant onClose={() => setShowAiAssistant(false)} />
+      )}
+    </div>
   );
 };
 
