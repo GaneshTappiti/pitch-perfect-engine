@@ -73,7 +73,6 @@ const Hero = () => {
           </div>
           
           <div className="relative w-full max-w-5xl mt-16">
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background z-10"></div>
             <img 
               src="https://i.imgur.com/XQK6xDp.png" 
               alt="Startify OS Dashboard" 
