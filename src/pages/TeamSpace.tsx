@@ -5,8 +5,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Users,
   UserPlus,
+  ChevronLeft
 } from "lucide-react";
-import WorkspaceLayout from "@/components/WorkspaceLayout";
+import { Link } from "react-router-dom";
 import TeamMemberCard from "@/components/teamspace/TeamMemberCard";
 import AddTeamMemberModal from "@/components/teamspace/AddTeamMemberModal";
 import TeamRoles from "@/components/teamspace/TeamRoles";
@@ -182,6 +183,11 @@ const TeamSpace = () => {
 
   const handleAddMember = (newMember: TeamMember) => {
     setTeamMembers([...teamMembers, newMember]);
+    
+    toast({
+      title: "🎉 Team member added",
+      description: `${newMember.name} has been added to your team.`
+    });
   };
 
   const handleUpdateTaskStatus = (taskId: number, newStatus: string) => {
@@ -191,8 +197,31 @@ const TeamSpace = () => {
   };
 
   return (
-    <WorkspaceLayout>
-      <div className="container mx-auto animate-fade-in">
+    <div className="min-h-screen bg-background">
+      {/* Breadcrumb Navigation */}
+      <div className="border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Link 
+              to="/workspace" 
+              className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <span className="text-sm">Back to Workspace</span>
+            </Link>
+          </div>
+          <Button 
+            onClick={() => setIsAddMemberModalOpen(true)}
+            className="gap-2"
+            size="sm"
+          >
+            <UserPlus className="h-4 w-4" />
+            Add Team Member
+          </Button>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-6">
         <header className="mb-8">
           <h1 className="text-3xl font-bold mb-2">TeamSpace</h1>
           <p className="text-muted-foreground">
@@ -200,61 +229,55 @@ const TeamSpace = () => {
           </p>
         </header>
         
-        <div className="mb-8 flex justify-between items-center">
-          <div>
-            <h2 className="text-2xl font-semibold">Startup Team</h2>
+        <Tabs 
+          defaultValue="team" 
+          value={activeTab} 
+          onValueChange={setActiveTab} 
+          className="w-full"
+        >
+          <div className="border-b mb-6">
+            <TabsList className="bg-transparent h-12 p-0 -mb-px">
+              <TabsTrigger 
+                value="team" 
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-6 h-12"
+              >
+                <Users className="h-4 w-4 mr-2" />
+                Team
+              </TabsTrigger>
+              <TabsTrigger 
+                value="tasks" 
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-6 h-12"
+              >
+                Tasks
+              </TabsTrigger>
+              <TabsTrigger 
+                value="messages" 
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-6 h-12"
+              >
+                Messages
+              </TabsTrigger>
+              <TabsTrigger 
+                value="meetings" 
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-6 h-12"
+              >
+                Meetings
+              </TabsTrigger>
+            </TabsList>
           </div>
-          <Button onClick={() => setIsAddMemberModalOpen(true)} className="hover:scale-105 transition-transform">
-            <UserPlus className="h-4 w-4 mr-2" />
-            Add Team Member
-          </Button>
-        </div>
-        
-        <Tabs defaultValue="team" className="mb-8">
-          <TabsList>
-            <TabsTrigger 
-              value="team" 
-              onClick={() => setActiveTab("team")}
-              className={activeTab === "team" ? "tab-active" : ""}
-            >
-              Team
-            </TabsTrigger>
-            <TabsTrigger 
-              value="tasks" 
-              onClick={() => setActiveTab("tasks")}
-              className={activeTab === "tasks" ? "tab-active" : ""}
-            >
-              Tasks
-            </TabsTrigger>
-            <TabsTrigger 
-              value="messages" 
-              onClick={() => setActiveTab("messages")}
-              className={activeTab === "messages" ? "tab-active" : ""}
-            >
-              Messages
-            </TabsTrigger>
-            <TabsTrigger 
-              value="meetings" 
-              onClick={() => setActiveTab("meetings")}
-              className={activeTab === "meetings" ? "tab-active" : ""}
-            >
-              Meetings
-            </TabsTrigger>
-          </TabsList>
           
-          <TabsContent value="team" className="mt-6 animate-fade-in">
+          <TabsContent value="team" className="animate-fade-in mt-0">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {teamMembers.map(member => (
                 <TeamMemberCard key={member.id} member={member} />
               ))}
               
               <div 
-                className="workspace-card border-dashed border-2 flex flex-col items-center justify-center cursor-pointer h-full hover:bg-white/5 transition-colors"
+                className="border border-dashed border-border rounded-lg flex flex-col items-center justify-center cursor-pointer h-full min-h-[200px] hover:bg-accent/50 transition-colors"
                 onClick={() => setIsAddMemberModalOpen(true)}
               >
                 <div className="flex flex-col items-center justify-center p-6 h-full">
-                  <div className="rounded-full bg-white/5 p-3 mb-4">
-                    <UserPlus className="h-6 w-6" />
+                  <div className="rounded-full bg-primary/10 p-3 mb-4">
+                    <UserPlus className="h-6 w-6 text-primary" />
                   </div>
                   <p className="font-medium">Add Team Member</p>
                   <p className="text-sm text-muted-foreground text-center mt-2">
@@ -267,26 +290,26 @@ const TeamSpace = () => {
             <TeamRoles />
           </TabsContent>
           
-          <TabsContent value="tasks" className="mt-6 animate-fade-in">
+          <TabsContent value="tasks" className="animate-fade-in mt-0">
             <TaskList tasks={tasks} onUpdateTask={handleUpdateTaskStatus} />
           </TabsContent>
           
-          <TabsContent value="messages" className="mt-6 animate-fade-in">
+          <TabsContent value="messages" className="animate-fade-in mt-0">
             <MessagesPanel messages={messages} />
           </TabsContent>
           
-          <TabsContent value="meetings" className="mt-6 animate-fade-in">
+          <TabsContent value="meetings" className="animate-fade-in mt-0">
             <MeetingsList meetings={meetings} />
           </TabsContent>
         </Tabs>
-        
-        <AddTeamMemberModal 
-          isOpen={isAddMemberModalOpen} 
-          onClose={() => setIsAddMemberModalOpen(false)} 
-          onAddMember={handleAddMember}
-        />
       </div>
-    </WorkspaceLayout>
+      
+      <AddTeamMemberModal 
+        isOpen={isAddMemberModalOpen} 
+        onClose={() => setIsAddMemberModalOpen(false)} 
+        onAddMember={handleAddMember}
+      />
+    </div>
   );
 };
 

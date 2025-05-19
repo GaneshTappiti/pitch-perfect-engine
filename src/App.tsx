@@ -14,7 +14,6 @@ import MVPStudio from "./pages/MVPStudio";
 import DocsDecks from "./pages/DocsDecks";
 import TeamSpace from "./pages/TeamSpace";
 import InvestorRadar from "./pages/InvestorRadar";
-import TractionBoard from "./pages/TractionBoard";
 import IdeaForge from "./pages/IdeaForge";
 import PitchPerfect from "./pages/PitchPerfect";
 import FeaturesPage from "./pages/Features";
@@ -43,7 +42,6 @@ const App = () => (
           <Route path="/workspace/docs-decks/editor/:docId" element={<DocumentEditor />} />
           <Route path="/workspace/teamspace" element={<TeamSpace />} />
           <Route path="/workspace/investor-radar" element={<InvestorRadar />} />
-          <Route path="/workspace/traction-board" element={<TractionBoard />} />
           <Route path="/workspace/pitch-perfect" element={<PitchPerfect />} />
           <Route path="/workspace/pitch-perfect/editor/:type/:id" element={<DocumentEditor />} />
           <Route path="/features" element={<FeaturesPage />} />
