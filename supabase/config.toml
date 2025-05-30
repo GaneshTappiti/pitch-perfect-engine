@@ -1,1 +1,8 @@
+
 project_id = "dsfikceaftssoaazhvwv"
+
+[functions.ideaforge-ai]
+verify_jwt = false
+
+[functions.wiki-ai]
+verify_jwt = false

@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Brain, X, SendHorizontal, RefreshCw, Download } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface IdeaForgeAssistantProps {
   onClose: () => void;
@@ -13,26 +15,62 @@ const IdeaForgeAssistant: React.FC<IdeaForgeAssistantProps> = ({ onClose }) => {
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [response, setResponse] = useState("");
+  const { toast } = useToast();
   
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!prompt.trim()) return;
     
     setIsGenerating(true);
     
-    // Simulate AI response after a delay
-    setTimeout(() => {
-      setResponse(`Here's what I found for "${prompt}":\n\n` +
-        "Your idea for an AI-powered grocery management app has significant market potential. " +
-        "Based on my analysis, here are some insights:\n\n" +
-        "1. Target Market: Urban professionals and families with busy schedules\n" +
-        "2. Competitor Analysis: Apps like Fridgely and NoWaste exist but lack AI capabilities\n" +
-        "3. Key Differentiators: AI food recognition, expiry predictions, and recipe suggestions\n" +
-        "4. Recommended Tech Stack: React Native + Firebase for MVP, with TensorFlow Lite for AI features\n" +
-        "5. Monetization Strategy: Freemium model with subscription for premium features\n\n" +
-        "Would you like me to expand on any of these points or generate a more detailed blueprint section?"
-      );
+    try {
+      console.log('Calling IdeaForge AI with prompt:', prompt);
+      
+      const { data, error } = await supabase.functions.invoke('ideaforge-ai', {
+        body: { prompt }
+      });
+
+      if (error) {
+        console.error('Supabase function error:', error);
+        toast({
+          title: "Error",
+          description: "Failed to generate AI response. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (data?.response) {
+        setResponse(data.response);
+      } else {
+        throw new Error('No response received from AI');
+      }
+    } catch (error) {
+      console.error('Error calling AI:', error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
       setIsGenerating(false);
-    }, 1500);
+    }
+  };
+
+  const handleRegenerate = () => {
+    if (prompt.trim()) {
+      setResponse("");
+      handleGenerate();
+    }
+  };
+
+  const handleSave = () => {
+    if (response) {
+      // In a real app, this would save to the user's idea document
+      toast({
+        title: "Saved!",
+        description: "AI response has been saved to your idea.",
+      });
+    }
   };
   
   return (
@@ -59,11 +97,22 @@ const IdeaForgeAssistant: React.FC<IdeaForgeAssistantProps> = ({ onClose }) => {
               <pre className="whitespace-pre-wrap text-sm font-sans">{response}</pre>
               
               <div className="flex gap-2 mt-4">
-                <Button size="sm" variant="outline" className="gap-1">
-                  <RefreshCw className="h-3 w-3" />
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="gap-1"
+                  onClick={handleRegenerate}
+                  disabled={isGenerating}
+                >
+                  <RefreshCw className={`h-3 w-3 ${isGenerating ? 'animate-spin' : ''}`} />
                   Regenerate
                 </Button>
-                <Button size="sm" variant="outline" className="gap-1">
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="gap-1"
+                  onClick={handleSave}
+                >
                   <Download className="h-3 w-3" />
                   Save
                 </Button>
@@ -87,6 +136,12 @@ const IdeaForgeAssistant: React.FC<IdeaForgeAssistantProps> = ({ onClose }) => {
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               className="min-h-[60px] resize-none"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleGenerate();
+                }
+              }}
             />
             <Button 
               className="h-auto"
@@ -106,14 +161,14 @@ const IdeaForgeAssistant: React.FC<IdeaForgeAssistantProps> = ({ onClose }) => {
             <Button 
               variant="link" 
               className="text-xs h-auto p-0 px-1"
-              onClick={() => setPrompt("Generate a business model for my idea")}
+              onClick={() => setPrompt("Generate a detailed business model for my idea")}
             >
               Business model
             </Button>
             <Button 
               variant="link" 
               className="text-xs h-auto p-0 px-1"
-              onClick={() => setPrompt("Analyze market potential")}
+              onClick={() => setPrompt("Analyze the market potential and competition")}
             >
               Market analysis
             </Button>

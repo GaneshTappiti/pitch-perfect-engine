@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { X, Send, Sparkles } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface WikiAiAssistantProps {
   onClose: () => void;
@@ -10,32 +12,76 @@ interface WikiAiAssistantProps {
 
 const WikiAiAssistant: React.FC<WikiAiAssistantProps> = ({ onClose }) => {
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [conversation, setConversation] = useState<{ role: "user" | "assistant"; content: string }[]>([
     { 
       role: "assistant", 
       content: "Hello! I'm your wiki assistant. How can I help you organize your startup knowledge today?" 
     }
   ]);
+  const { toast } = useToast();
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!message.trim()) return;
+    if (!message.trim() || isLoading) return;
     
-    // Add user message
-    setConversation([...conversation, { role: "user", content: message }]);
+    const userMessage = message.trim();
+    setMessage("");
     
-    // Simulate AI response
-    setTimeout(() => {
+    // Add user message to conversation
+    const newConversation = [...conversation, { role: "user" as const, content: userMessage }];
+    setConversation(newConversation);
+    setIsLoading(true);
+    
+    try {
+      console.log('Calling Wiki AI with message:', userMessage);
+      
+      // Prepare conversation history for context
+      const conversationHistory = newConversation
+        .slice(-8) // Keep last 8 messages for context
+        .map(msg => ({ role: msg.role, content: msg.content }));
+      
+      const { data, error } = await supabase.functions.invoke('wiki-ai', {
+        body: { 
+          message: userMessage,
+          conversationHistory: conversationHistory.slice(0, -1) // Exclude the current message
+        }
+      });
+
+      if (error) {
+        console.error('Supabase function error:', error);
+        toast({
+          title: "Error",
+          description: "Failed to get AI response. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (data?.response) {
+        setConversation(prev => [
+          ...prev,
+          { role: "assistant", content: data.response }
+        ]);
+      } else {
+        throw new Error('No response received from AI');
+      }
+    } catch (error) {
+      console.error('Error calling AI:', error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+      
+      // Add error message to conversation
       setConversation(prev => [
         ...prev,
-        { 
-          role: "assistant", 
-          content: `I can help you with that! Here are some suggestions for "${message}".` 
-        }
+        { role: "assistant", content: "I'm sorry, I encountered an error. Please try asking again." }
       ]);
-    }, 1000);
-    
-    setMessage("");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -65,10 +111,20 @@ const WikiAiAssistant: React.FC<WikiAiAssistantProps> = ({ onClose }) => {
                   : "bg-muted"
               }`}
             >
-              {msg.content}
+              <div className="whitespace-pre-wrap text-sm">{msg.content}</div>
             </div>
           </div>
         ))}
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="bg-muted rounded-lg p-3 max-w-[80%]">
+              <div className="flex items-center gap-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+                <span className="text-sm text-muted-foreground">Thinking...</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       
       <form onSubmit={handleSubmit} className="border-t p-4 flex gap-2">
@@ -77,8 +133,9 @@ const WikiAiAssistant: React.FC<WikiAiAssistantProps> = ({ onClose }) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           className="flex-1"
+          disabled={isLoading}
         />
-        <Button type="submit" size="icon">
+        <Button type="submit" size="icon" disabled={!message.trim() || isLoading}>
           <Send className="h-4 w-4" />
           <span className="sr-only">Send</span>
         </Button>
