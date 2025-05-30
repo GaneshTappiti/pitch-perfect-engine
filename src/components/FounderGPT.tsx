@@ -42,6 +42,8 @@ const FounderGPT = () => {
         body: { message: userMessage }
       });
 
+      console.log('Founder GPT response:', data, 'Error:', error);
+
       if (error) {
         console.error('Supabase function error:', error);
         toast({
@@ -53,10 +55,15 @@ const FounderGPT = () => {
       }
 
       if (data?.response) {
+        console.log('Adding AI response to conversation');
         setConversation(prev => [
           ...prev,
           { role: "assistant", content: data.response }
         ]);
+        toast({
+          title: "Analysis Complete",
+          description: "I've analyzed your startup idea!",
+        });
       } else {
         throw new Error('No response received from AI');
       }
@@ -107,7 +114,7 @@ const FounderGPT = () => {
               <div className="bg-muted rounded-lg p-3 max-w-[80%]">
                 <div className="flex items-center gap-2">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-                  <span className="text-sm text-muted-foreground">Analyzing your idea...</span>
+                  <span className="text-sm text-muted-foreground">Analyzing your startup idea...</span>
                 </div>
               </div>
             </div>
