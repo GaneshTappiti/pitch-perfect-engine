@@ -19,6 +19,14 @@ serve(async (req) => {
 
     console.log('Founder GPT request:', message);
 
+    if (!openAIApiKey) {
+      console.error('OpenAI API key not found');
+      return new Response(JSON.stringify({ error: 'OpenAI API key not configured' }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const systemPrompt = `You are a startup strategist, product researcher, and business model analyst with expertise in AI, app development, and product validation. You are also trained in the Prompt Engineering v4 framework by Lee Boonstra.
 
 When a user describes their startup idea, analyze it thoroughly by applying a structured prompt engineering framework.
@@ -77,6 +85,8 @@ End with asking if they should tweak the MVP or pivot the concept.
 
 Be encouraging but realistic, provide actionable insights, and maintain a professional yet supportive tone.`;
 
+    console.log('Making request to OpenAI API...');
+    
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -97,11 +107,40 @@ Be encouraging but realistic, provide actionable insights, and maintain a profes
       }),
     });
 
+    console.log('OpenAI API response status:', response.status);
+
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error('OpenAI API error:', response.status, errorText);
+      
+      if (response.status === 429) {
+        return new Response(JSON.stringify({ 
+          error: 'Rate limit exceeded. Please wait a moment and try again.' 
+        }), {
+          status: 429,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      if (response.status === 401) {
+        return new Response(JSON.stringify({ 
+          error: 'Invalid API key. Please check your OpenAI API key configuration.' 
+        }), {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
+    
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      console.error('Invalid response format from OpenAI:', data);
+      throw new Error('Invalid response format from OpenAI');
+    }
+    
     const generatedResponse = data.choices[0].message.content;
 
     console.log('Founder GPT response generated successfully');
@@ -111,7 +150,9 @@ Be encouraging but realistic, provide actionable insights, and maintain a profes
     });
   } catch (error) {
     console.error('Error in founder-gpt function:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ 
+      error: error.message || 'An unexpected error occurred' 
+    }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

@@ -51,6 +51,8 @@ const FounderGPT = () => {
           description: "Failed to get AI response. Please try again.",
           variant: "destructive",
         });
+        // Remove the user message if there was an error
+        setConversation(conversation);
         return;
       }
 
@@ -64,6 +66,27 @@ const FounderGPT = () => {
           title: "Analysis Complete",
           description: "I've analyzed your startup idea!",
         });
+      } else if (data?.error) {
+        console.error('AI function returned error:', data.error);
+        let errorMessage = "Something went wrong. Please try again.";
+        
+        if (data.error.includes('Rate limit')) {
+          errorMessage = "Too many requests. Please wait a moment and try again.";
+        } else if (data.error.includes('API key')) {
+          errorMessage = "API configuration issue. Please contact support.";
+        }
+        
+        toast({
+          title: "Error",
+          description: errorMessage,
+          variant: "destructive",
+        });
+        
+        // Add error message to conversation
+        setConversation(prev => [
+          ...prev,
+          { role: "assistant", content: "I'm sorry, I encountered an error. Please try asking again in a moment." }
+        ]);
       } else {
         throw new Error('No response received from AI');
       }
@@ -75,11 +98,8 @@ const FounderGPT = () => {
         variant: "destructive",
       });
       
-      // Add error message to conversation
-      setConversation(prev => [
-        ...prev,
-        { role: "assistant", content: "I'm sorry, I encountered an error. Please try asking again." }
-      ]);
+      // Remove the user message if there was an error
+      setConversation(conversation);
     } finally {
       setIsLoading(false);
     }
