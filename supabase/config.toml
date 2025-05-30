@@ -6,3 +6,6 @@ verify_jwt = false
 
 [functions.wiki-ai]
 verify_jwt = false
+
+[functions.founder-gpt]
+verify_jwt = false

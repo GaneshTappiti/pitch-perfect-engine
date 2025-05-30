@@ -1,15 +1,12 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { 
-  MessageSquare,
   PlusCircle,
-  ArrowRight,
-  Brain
+  ArrowRight
 } from "lucide-react";
 import WorkspaceSidebar from "@/components/WorkspaceSidebar";
+import FounderGPT from "@/components/FounderGPT";
 
 const Workspace = () => {
   const recentProjects = [
@@ -77,23 +74,7 @@ const Workspace = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Founder's GPT Card */}
-            <div className="glass-effect p-6 col-span-full flex flex-col md:flex-row gap-6 items-center">
-              <div className="flex-shrink-0 text-4xl">🪄</div>
-              <div className="flex-grow">
-                <h3 className="text-xl font-semibold mb-2">Founder's GPT</h3>
-                <p className="text-muted-foreground mb-4">Your startup mentor, therapist, co-founder, and investor rolled into one</p>
-                <div className="bg-white/5 rounded-lg p-4 flex items-center gap-2 mb-3">
-                  <Input 
-                    placeholder="Ask anything about startups..." 
-                    className="bg-transparent border-white/10"
-                  />
-                  <Button size="icon" variant="ghost">
-                    <MessageSquare className="h-5 w-5" />
-                  </Button>
-                </div>
-                <div className="text-sm text-muted-foreground">Try asking: "How do I validate a 2-sided marketplace?"</div>
-              </div>
-            </div>
+            <FounderGPT />
             
             {/* Quick Access Modules */}
             <div className="workspace-card col-span-full">
