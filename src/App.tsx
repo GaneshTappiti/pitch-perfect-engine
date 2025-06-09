@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -21,6 +20,7 @@ import IdeaDetails from "./pages/IdeaDetails";
 import DocumentEditor from "./pages/DocumentEditor";
 import WikiPageView from "./pages/WikiPageView";
 import WikiPageEditor from "./pages/WikiPageEditor";
+import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +32,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/workspace" element={<Workspace />} />
           <Route path="/workspace/idea-vault" element={<IdeaVault />} />
           <Route path="/workspace/idea-vault/:ideaId" element={<IdeaDetails />} />

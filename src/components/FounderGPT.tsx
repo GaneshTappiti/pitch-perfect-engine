@@ -96,7 +96,6 @@ const FounderGPT = () => {
         description: error.message || "Something went wrong. Please try again.",
         variant: "destructive",
       });
-      
       // Remove the user message if there was an error
       setConversation(conversation);
     } finally {
