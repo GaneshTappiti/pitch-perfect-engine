@@ -1,9 +1,8 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Hero = () => {
@@ -20,64 +19,84 @@ const Hero = () => {
   };
 
   return (
-    <section className="w-full pt-28 pb-20 md:pt-32 md:pb-28 relative overflow-hidden">
-      <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center space-y-8 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/5 px-3 py-1 text-sm backdrop-blur-sm border border-white/10">
-            <Sparkles className="h-4 w-4 text-primary" />
+    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute inset-0">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-float"></div>
+        <div className="absolute top-40 right-10 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-float" style={{animationDelay: '2s'}}></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-float" style={{animationDelay: '4s'}}></div>
+      </div>
+
+      <div className="container px-4 md:px-6 relative z-10">
+        <div className="flex flex-col items-center space-y-8 text-center max-w-4xl mx-auto">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700 border border-blue-200">
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
             <span>Transforming ideas into reality</span>
           </div>
           
-          <div className="space-y-4 max-w-3xl">
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl/none">
-              The Ultimate <span className="text-gradient">AI Platform</span> For <br />
-              Startup Founders
+          {/* Main heading */}
+          <div className="space-y-6">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900">
+              The Ultimate{" "}
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                AI Platform
+              </span>{" "}
+              For Startup Founders
             </h1>
-            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+            <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               Transform your ideas into successful startups with our all-in-one validation, 
               planning, and development platform powered by AI.
             </p>
           </div>
           
-          <div className="w-full max-w-md space-y-3">
-            <form className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2" onSubmit={handleSubmit}>
+          {/* CTA Section */}
+          <div className="w-full max-w-md space-y-4">
+            <form className="flex flex-col sm:flex-row gap-3" onSubmit={handleSubmit}>
               <Input
-                className="flex-1 bg-white/5 backdrop-blur-sm border-white/10 text-white placeholder:text-white/50"
+                className="flex-1 h-12 px-4 bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                 placeholder="Enter your email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <Button type="submit" className="bg-primary hover:bg-primary/90 flex items-center gap-2">
+              <Button type="submit" className="h-12 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium">
                 Start Free Trial
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </form>
-            <p className="text-xs text-gray-500">
+            <p className="text-sm text-gray-500">
               No credit card required. 14-day free trial.
             </p>
           </div>
           
-          <div className="flex mt-8 gap-4">
-            <Button asChild variant="outline" className="border-white/10 hover:bg-white/5">
-              <Link to="/features">
-                Explore Features
-              </Link>
-            </Button>
-            <Button asChild>
+          {/* Action buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
               <Link to="/workspace">
                 Get Started
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3">
+              <Link to="/features">
+                <Play className="mr-2 h-5 w-5" />
+                Watch Demo
               </Link>
             </Button>
           </div>
+
+          {/* Social proof */}
+          <div className="pt-8">
+            <p className="text-sm text-gray-500 mb-4">Trusted by 10,000+ founders worldwide</p>
+            <div className="flex items-center justify-center gap-8 opacity-60">
+              <div className="text-2xl font-bold text-gray-400">YC</div>
+              <div className="text-2xl font-bold text-gray-400">Techstars</div>
+              <div className="text-2xl font-bold text-gray-400">500 Startups</div>
+              <div className="text-2xl font-bold text-gray-400">Founders</div>
+            </div>
+          </div>
         </div>
-      </div>
-      
-      {/* Decorative elements */}
-      <div className="absolute -top-20 left-0 w-full">
-        <div className="absolute top-0 -left-40 w-96 h-96 bg-purple-600/20 rounded-full filter blur-3xl"></div>
-        <div className="absolute top-40 right-0 w-96 h-96 bg-pink-600/10 rounded-full filter blur-3xl"></div>
       </div>
     </section>
   );
