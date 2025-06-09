@@ -1,3 +1,4 @@
+
 import { ArrowRight, CheckCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
@@ -10,7 +11,7 @@ const Features = () => {
       icon: "🏠",
       title: "Dashboard",
       description: "Launchpad to all tools with quick access, daily brief, and startup health meter",
-      gradient: "from-blue-500 to-cyan-500",
+      gradient: "feature-gradient-1",
       path: "/workspace",
     },
     {
@@ -18,7 +19,7 @@ const Features = () => {
       icon: "💡",
       title: "Idea Vault",
       description: "Store + grow ideas with AI enhancer, tags, voting, and privacy controls",
-      gradient: "from-purple-500 to-pink-500",
+      gradient: "feature-gradient-2",
       path: "/workspace/idea-vault",
     },
     {
@@ -26,7 +27,7 @@ const Features = () => {
       icon: "🧠",
       title: "AI Roadmap",
       description: "Auto-generate business plans with GPT-based phase planning and editable milestones",
-      gradient: "from-green-500 to-emerald-500",
+      gradient: "feature-gradient-3",
       path: "/workspace/blueprint-zone",
     },
     {
@@ -34,7 +35,7 @@ const Features = () => {
       icon: "📆",
       title: "Task Planner",
       description: "Build execution calendar with daily/weekly/monthly smart planning",
-      gradient: "from-orange-500 to-red-500",
+      gradient: "feature-gradient-4",
       path: "/workspace/task-planner",
     },
     {
@@ -42,7 +43,7 @@ const Features = () => {
       icon: "🧱",
       title: "MVP Studio",
       description: "Build using AI + no-code with builder templates, GPT codex, and MVP checklists",
-      gradient: "from-indigo-500 to-purple-500",
+      gradient: "feature-gradient-1",
       path: "/workspace/mvp-studio",
     },
     {
@@ -50,7 +51,7 @@ const Features = () => {
       icon: "🧾",
       title: "Docs & Decks",
       description: "Auto-generate investor decks, one-pagers and more with AI assistance",
-      gradient: "from-pink-500 to-rose-500",
+      gradient: "feature-gradient-2",
       path: "/workspace/docs-decks",
     },
     {
@@ -58,7 +59,7 @@ const Features = () => {
       icon: "👥",
       title: "TeamSpace",
       description: "Collaborate with founders and team members with roles, chat, and co-founder tasks",
-      gradient: "from-teal-500 to-cyan-500",
+      gradient: "feature-gradient-3",
       path: "/workspace/teamspace",
     },
     {
@@ -66,8 +67,24 @@ const Features = () => {
       icon: "🔍",
       title: "Investor Radar",
       description: "Get matched to VCs with filters by region, sector, ticket size, and stage",
-      gradient: "from-violet-500 to-purple-500",
+      gradient: "feature-gradient-4",
       path: "/workspace/investor-radar",
+    },
+    {
+      id: "traction-board",
+      icon: "📈",
+      title: "Traction Board",
+      description: "Track your metrics including users, revenue, and feedback logs",
+      gradient: "feature-gradient-1",
+      path: "/workspace/traction-board",
+    },
+    {
+      id: "idea-wiki",
+      icon: "📓",
+      title: "Idea Wiki",
+      description: "Build a knowledge base with Markdown editor, tag system, and linked docs",
+      gradient: "feature-gradient-2",
+      path: "/workspace/idea-wiki",
     },
   ];
 
@@ -103,39 +120,70 @@ const Features = () => {
         "Suggests optimal work patterns based on your preferences",
       ]
     },
+    {
+      title: "Investor-Ready Docs in Clicks",
+      icon: "🧾",
+      description: "AI auto-generates all the documents you need to pitch investors",
+      bullets: [
+        "One-pagers and pitch decks",
+        "Business model canvas",
+        "Go-to-market strategy",
+        "Export as PDF/Notion/GDocs formats",
+      ]
+    },
+    {
+      title: "Traction + Feedback Dashboard",
+      icon: "🎯",
+      description: "Integrates with analytics tools to provide insights on your startup's performance",
+      bullets: [
+        "User growth over time visualization",
+        "Retention heatmaps",
+        "Feedback sentiment analysis",
+        "Integration with Google Analytics & Firebase",
+      ]
+    },
+    {
+      title: "No-Code AI Builder Companion",
+      icon: "🧱",
+      description: "Like GPT + Webflow + Bubble + Stripe helper in one spot",
+      bullets: [
+        "Generate code blocks for common features",
+        "Recommendations for no-code tools",
+        "Auto-deploy via Vercel / Netlify / Bubble",
+      ]
+    },
   ];
   
   return (
-    <section className="w-full py-20 md:py-32 bg-gray-50" id="features">
+    <section className="w-full py-16 md:py-24 relative" id="features">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-4 text-center mb-16">
-          <div className="inline-flex items-center rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700">
+          <div className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm text-primary">
             StartWise – Your Smart Startup Sidekick
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
             From Idea to IPO, One Tab at a Time
           </h2>
-          <p className="max-w-3xl text-xl text-gray-600 leading-relaxed">
+          <p className="max-w-[800px] text-muted-foreground md:text-xl/relaxed">
             The ultimate AI-powered platform designed to take your startup from concept to launch and beyond
           </p>
         </div>
         
         {/* Core Modules Grid */}
-        <h3 className="text-3xl font-bold text-center mb-12 text-gray-900">The StartWise OS</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+        <h3 className="text-2xl font-semibold text-center mb-8">The StartWise OS</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           {features.map((feature) => (
-            <Card key={feature.id} className="group relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white">
-              <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-5 group-hover:opacity-10 transition-opacity`}></div>
-              <CardHeader className="relative">
-                <div className="text-4xl mb-3">{feature.icon}</div>
-                <CardTitle className="text-xl text-gray-900">{feature.title}</CardTitle>
+            <Card key={feature.id} className={`workspace-card overflow-hidden ${feature.gradient}`}>
+              <CardHeader>
+                <div className="text-4xl mb-2">{feature.icon}</div>
+                <CardTitle>{feature.title}</CardTitle>
               </CardHeader>
-              <CardContent className="relative">
-                <CardDescription className="text-gray-600 mb-4">{feature.description}</CardDescription>
-                <Button asChild variant="ghost" className="group-hover:text-blue-600 p-0 h-auto font-medium">
+              <CardContent>
+                <CardDescription className="text-base">{feature.description}</CardDescription>
+                <Button asChild className="mt-4">
                   <Link to={feature.path}>
                     Explore
-                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
               </CardContent>
@@ -144,30 +192,29 @@ const Features = () => {
         </div>
         
         {/* Killer Features */}
-        <div className="mb-20">
-          <h3 className="text-3xl font-bold text-center mb-4 text-gray-900">
-            Killer Features That Make Us Unique
+        <div className="mb-16">
+          <h3 className="text-2xl font-semibold text-center mb-12">
+            <span className="bg-clip-text bg-gradient-to-r from-primary to-purple-400 text-transparent">
+              Killer Features That Make Us Unique
+            </span>
           </h3>
-          <p className="text-xl text-gray-600 text-center mb-16 max-w-3xl mx-auto">
-            Discover the powerful tools that set StartWise apart from the competition
-          </p>
           
-          <div className="grid gap-16">
+          <div className="grid gap-12">
             {killerFeatures.map((feature, index) => (
-              <div key={index} className={`flex flex-col lg:flex-row gap-12 items-center ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
+              <div key={index} className={`flex flex-col lg:flex-row gap-8 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
                 <div className="lg:w-1/2 flex items-center justify-center">
-                  <div className="w-full h-80 rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center shadow-lg">
-                    <span className="text-8xl">{feature.icon}</span>
+                  <div className={`w-full h-64 rounded-2xl glass-effect flex items-center justify-center ${index % 2 === 0 ? 'feature-gradient-1' : 'feature-gradient-2'}`}>
+                    <span className="text-7xl">{feature.icon}</span>
                   </div>
                 </div>
                 <div className="lg:w-1/2 flex flex-col justify-center">
-                  <h4 className="text-3xl font-bold mb-4 text-gray-900">{feature.title}</h4>
-                  <p className="text-xl text-gray-600 mb-8 leading-relaxed">{feature.description}</p>
-                  <ul className="space-y-4">
+                  <h4 className="text-2xl font-bold mb-4">{feature.title}</h4>
+                  <p className="text-muted-foreground mb-6">{feature.description}</p>
+                  <ul className="space-y-3">
                     {feature.bullets.map((bullet, idx) => (
-                      <li key={idx} className="flex items-start gap-3">
-                        <CheckCircle className="h-6 w-6 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700">{bullet}</span>
+                      <li key={idx} className="flex items-start gap-2">
+                        <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                        <span>{bullet}</span>
                       </li>
                     ))}
                   </ul>
@@ -178,15 +225,12 @@ const Features = () => {
         </div>
         
         {/* CTA */}
-        <div className="text-center bg-white rounded-2xl p-12 shadow-lg">
-          <h3 className="text-3xl font-bold mb-6 text-gray-900">Ready to supercharge your startup journey?</h3>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Join thousands of founders who are already building successful startups with StartWise
-          </p>
-          <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg">
+        <div className="text-center mt-12">
+          <h3 className="text-2xl font-bold mb-6">Ready to supercharge your startup journey?</h3>
+          <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
             <Link to="/workspace">
               Enter Workspace
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>

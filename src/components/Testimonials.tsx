@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 const testimonials = [
@@ -23,34 +24,36 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="w-full py-20 md:py-32 bg-white">
+    <section className="w-full py-12 md:py-24 lg:py-32 bg-black/90">
       <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center space-y-4 text-center mb-16">
-          <div className="inline-block rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700">
-            Testimonials
+        <div className="flex flex-col items-center space-y-4 text-center">
+          <div className="space-y-2">
+            <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">
+              Testimonials
+            </div>
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">From Our Founders</h2>
+            <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
+              See how entrepreneurs like you are using our platform to build successful startups.
+            </p>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900">From Our Founders</h2>
-          <p className="max-w-3xl text-xl text-gray-600 leading-relaxed">
-            See how entrepreneurs like you are using our platform to build successful startups.
-          </p>
         </div>
         
-        <div className="mx-auto grid gap-8 sm:grid-cols-2 lg:grid-cols-3 items-stretch">
+        <div className="mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3 items-stretch mt-12">
           {testimonials.map((testimonial, i) => (
-            <Card key={i} className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white">
-              <CardContent className="flex-grow pt-8 px-8">
-                <div className="mb-6 text-4xl text-blue-600">"</div>
-                <p className="text-lg text-gray-700 leading-relaxed">{testimonial.quote}</p>
+            <Card key={i} className="border border-white/10 bg-black/50 backdrop-blur-sm flex flex-col">
+              <CardContent className="flex-grow pt-6">
+                <div className="mb-4 text-3xl">"</div>
+                <p className="text-lg italic text-gray-300">{testimonial.quote}</p>
               </CardContent>
-              <CardFooter className="flex items-center space-x-4 border-t border-gray-100 pt-6 px-8 pb-8">
+              <CardFooter className="flex items-center space-x-4 border-t border-white/10 pt-4">
                 <img 
                   src={testimonial.avatar} 
                   alt={testimonial.author} 
-                  className="w-12 h-12 rounded-full object-cover"
+                  className="w-10 h-10 rounded-full"
                 />
                 <div>
-                  <h4 className="font-semibold text-gray-900">{testimonial.author}</h4>
-                  <p className="text-sm text-gray-600">{testimonial.role}</p>
+                  <h4 className="font-medium">{testimonial.author}</h4>
+                  <p className="text-sm text-gray-500">{testimonial.role}</p>
                 </div>
               </CardFooter>
             </Card>
