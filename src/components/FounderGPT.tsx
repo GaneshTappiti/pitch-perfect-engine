@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -90,11 +89,11 @@ const FounderGPT = () => {
       } else {
         throw new Error('No response received from AI');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error calling AI:', error);
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again.",
+        description: error.message || "Something went wrong. Please try again.",
         variant: "destructive",
       });
       
@@ -116,31 +115,29 @@ const FounderGPT = () => {
       </div>
 
       {/* Conversation Display */}
-      {conversation.length > 1 && (
-        <div className="mb-4 max-h-80 overflow-y-auto space-y-3 p-4 bg-white/5 rounded-lg">
-          {conversation.map((msg, index) => (
-            <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[80%] rounded-lg p-3 ${
-                msg.role === "user" 
-                  ? "bg-primary text-primary-foreground ml-auto" 
-                  : "bg-muted"
-              }`}>
-                <div className="whitespace-pre-wrap text-sm">{msg.content}</div>
+      <div className="mb-4 max-h-80 overflow-y-auto space-y-3 p-4 bg-white/5 rounded-lg">
+        {conversation.map((msg, index) => (
+          <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+            <div className={`max-w-[80%] rounded-lg p-3 ${
+              msg.role === "user" 
+                ? "bg-primary text-primary-foreground ml-auto" 
+                : "bg-muted"
+            }`}>
+              <div className="whitespace-pre-wrap text-sm">{msg.content}</div>
+            </div>
+          </div>
+        ))}
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="bg-muted rounded-lg p-3 max-w-[80%]">
+              <div className="flex items-center gap-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+                <span className="text-sm text-muted-foreground">Analyzing your startup idea...</span>
               </div>
             </div>
-          ))}
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-muted rounded-lg p-3 max-w-[80%]">
-                <div className="flex items-center gap-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-                  <span className="text-sm text-muted-foreground">Analyzing your startup idea...</span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
 
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <Input 
@@ -159,11 +156,9 @@ const FounderGPT = () => {
         </Button>
       </form>
       
-      {conversation.length === 1 && (
-        <div className="text-sm text-muted-foreground mt-3">
-          Try asking: "I want to build an AI-powered personal finance app that tracks expenses using photos"
-        </div>
-      )}
+      <div className="text-sm text-muted-foreground mt-3">
+        Try asking: "I want to build an AI-powered personal finance app that tracks expenses using photos"
+      </div>
     </Card>
   );
 };

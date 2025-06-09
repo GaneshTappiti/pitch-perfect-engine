@@ -1,0 +1,5 @@
+[functions.founder-gpt]
+verify_jwt = false
+
+[functions.ideaforge-ai]
+verify_jwt = false 

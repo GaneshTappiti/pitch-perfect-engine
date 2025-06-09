@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -41,14 +40,33 @@ const IdeaForgeAssistant: React.FC<IdeaForgeAssistantProps> = ({ onClose }) => {
 
       if (data?.response) {
         setResponse(data.response);
+        toast({
+          title: "Success",
+          description: "AI response generated successfully!",
+        });
+      } else if (data?.error) {
+        console.error('AI function returned error:', data.error);
+        let errorMessage = "Something went wrong. Please try again.";
+        
+        if (data.error.includes('Rate limit')) {
+          errorMessage = "Too many requests. Please wait a moment and try again.";
+        } else if (data.error.includes('API key')) {
+          errorMessage = "API configuration issue. Please contact support.";
+        }
+        
+        toast({
+          title: "Error",
+          description: errorMessage,
+          variant: "destructive",
+        });
       } else {
         throw new Error('No response received from AI');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error calling AI:', error);
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again.",
+        description: error.message || "Something went wrong. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -156,8 +174,7 @@ const IdeaForgeAssistant: React.FC<IdeaForgeAssistantProps> = ({ onClose }) => {
             </Button>
           </div>
           
-          <div className="text-xs text-muted-foreground mt-2">
-            Suggestions: 
+          <div className="flex gap-2 mt-2">
             <Button 
               variant="link" 
               className="text-xs h-auto p-0 px-1"
